@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
+    "emmanuelbeziat.vscode-great-icons",
+    "esbenp.prettier-vscode",
+    "formulahendry.vscode-mysql",
+    "Gruntfuggly.todo-tree",
+    "matangover.mypy",
+    "ms-python.pylint",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "rvest.vs-code-prettier-eslint",
+    "shardulm94.trailing-spaces",
+    "shd101wyy.markdown-preview-enhanced",
+    "streetsidesoftware.code-spell-checker",
+    "syler.sass-indented",
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin",
+    "yzhang.markdown-all-in-one"
+  ]
+}
