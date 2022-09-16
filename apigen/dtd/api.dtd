@@ -1,0 +1,22 @@
+<!ELEMENT api-data (main-object,interfaces?)>
+<!ATTLIST api-data class-name ID #REQUIRED>
+<!ELEMENT main-object ((description),(int|float|bool|string|list|object)+)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT int (key,description)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT float (key,description)>
+<!ELEMENT bool (key,description)>
+<!ELEMENT string (key,description)>
+<!ELEMENT list (key,description,(int-element|float-element|bool-element|string-element|list-element|object-element))>
+<!ELEMENT int-element (description)>
+<!ELEMENT float-element (description)>
+<!ELEMENT bool-element (description)>
+<!ELEMENT string-element (description)>
+<!ELEMENT list-element (description,(int-element|float-element|bool-element|string-element|list-element|object-element))>
+<!ELEMENT object-element (description)>
+<!ATTLIST object-element class-name IDREF #REQUIRED>
+<!ELEMENT object (description)>
+<!ATTLIST object interface-name IDREF #REQUIRED>
+<!ELEMENT interfaces (interface+)>
+<!ELEMENT interface ((description),(int|float|bool|string|list|object)+)>
+<!ATTLIST interface class-name ID #REQUIRED>

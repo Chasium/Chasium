@@ -9,6 +9,7 @@
     "ms-python.pylint",
     "ms-python.python",
     "ms-python.vscode-pylance",
+    "redhat.vscode-xml",
     "rvest.vs-code-prettier-eslint",
     "shardulm94.trailing-spaces",
     "shd101wyy.markdown-preview-enhanced",
