@@ -1,6 +1,12 @@
-<!ELEMENT api-data (main-object,interfaces?)>
-<!ATTLIST api-data class-name ID #REQUIRED>
-<!ELEMENT main-object ((description),(int|float|bool|string|list|object)+)>
+<!ELEMENT api-data (api-path,(http-request|http-response|ws-request|ws-response),main-class,classes?)>
+<!ELEMENT api-path (#PCDATA)>
+<!ELEMENT http-request EMPTY>
+<!ELEMENT http-response EMPTY>
+<!ELEMENT ws-request EMPTY>
+<!ELEMENT ws-response EMPTY>
+<!ELEMENT main-class (class)>
+<!ELEMENT class ((description),(int|float|bool|string|list|object)+)>
+<!ATTLIST class class-name ID #REQUIRED>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT int (key,description)>
 <!ELEMENT key (#PCDATA)>
@@ -16,7 +22,5 @@
 <!ELEMENT object-element (description)>
 <!ATTLIST object-element class-name IDREF #REQUIRED>
 <!ELEMENT object (description)>
-<!ATTLIST object interface-name IDREF #REQUIRED>
-<!ELEMENT interfaces (interface+)>
-<!ELEMENT interface ((description),(int|float|bool|string|list|object)+)>
-<!ATTLIST interface class-name ID #REQUIRED>
+<!ATTLIST object class-name IDREF #REQUIRED>
+<!ELEMENT classes (class+)>
