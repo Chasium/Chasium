@@ -1,11 +1,12 @@
 """
-main.py
 后端的入口文件
 """
-from flask import Flask
+from http_api import http_api
+from ws_api import ws_api
+from db import db
 
 
-app = Flask(__name__)
+db.init_app(http_api)
 
 if __name__ == '__main__':
-    app.run()
+    ws_api.run(http_api)
