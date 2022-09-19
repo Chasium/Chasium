@@ -19,6 +19,10 @@ class TestModels(TestCase):
         xml = parse(os.path.abspath(os.curdir + '/apis/test/test.xml'))
         test_data = APIData(xml.childNodes[1])
         self.assertEqual(test_data.main_class.class_name, 'Test')
+        self.assertTrue(test_data.main_class.fields['a1'] is not None)
+        self.assertTrue(
+            test_data.main_class.fields['a2'].element.element.obj_class.fields['aAbBcCDDe'] is not None
+        )
 
     def test_from_invalid(self):
         """

@@ -1,5 +1,7 @@
 """
 和xml中各元素对应的各类
+
+主要的有效类是ApiData
 """
 import re
 from typing import Any, Dict, List, Tuple
