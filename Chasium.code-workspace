@@ -1,0 +1,71 @@
+{
+  "folders": [
+    {
+      "path": "frontend",
+      "name": "前端"
+    },
+    {
+      "path": "backend",
+      "name": "后端"
+    },
+    {
+      "path": "apigen",
+      "name": "apigen项目"
+    },
+    {
+      "path": "local",
+      "name": "本地文件"
+    },
+    {
+      "path": "docs",
+      "name": "文档"
+    }
+  ],
+  "settings": {
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.python"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "emmanuelbeziat.vscode-great-icons",
+      "esbenp.prettier-vscode",
+      "formulahendry.vscode-mysql",
+      "Gruntfuggly.todo-tree",
+      "ms-python.pylint",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "redhat.vscode-xml",
+      "rvest.vs-code-prettier-eslint",
+      "shardulm94.trailing-spaces",
+      "shd101wyy.markdown-preview-enhanced",
+      "streetsidesoftware.code-spell-checker",
+      "syler.sass-indented",
+      "Vue.volar",
+      "Vue.vscode-typescript-vue-plugin",
+      "yzhang.markdown-all-in-one"
+    ]
+  }
+}

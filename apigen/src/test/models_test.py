@@ -4,7 +4,7 @@
 import os
 from unittest import TestCase
 from xml.dom.minidom import parse
-from src.models import APIData, ModelsException  # pylint:disable=import-error (为什么？？)
+from src.models import APIData, ModelsException
 
 
 class TestModels(TestCase):
