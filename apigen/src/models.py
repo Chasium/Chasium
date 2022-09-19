@@ -8,8 +8,20 @@ from typing import Any, Dict, List, Tuple
 KEY = re.compile(r'^[a-z]+[0-9]*([A-Z][a-z]*[0-9]*)*$')
 CLASS_NAME = re.compile(r'^([A-Z][a-z]*[0-9]*)+$')
 API_PATH = re.compile(
-    r'^((([a-z]+[0-9]*-)*[a-z]+[0-9]*)/)*(([a-z]+[0-9]*-)*[a-z]+[0-9]*)$'
+    r'^(/([a-z]+[0-9]*-)*[a-z]+[0-9]*)+$'
 )
+
+
+def no_text_children(xml: Any) -> List[Any]:
+    """
+    用于取出子节点中的非文本节点
+    """
+    original = xml.childNodes
+    out = []
+    for i in original:
+        if i.nodeName != '#text':
+            out.append(i)
+    return out
 
 
 class Field:
@@ -20,7 +32,7 @@ class Field:
     description: str
 
     def __init__(self, xml: Any) -> None:
-        children = xml.childNodes()
+        children = no_text_children(xml)
         if children is None or len(children) < 2:
             raise Exception('Illegal field node')
         self.key = children[0].firstChild.data
@@ -64,7 +76,7 @@ class Element:
     description: str
 
     def __init__(self, xml: Any) -> None:
-        children = xml.childNodes()
+        children = no_text_children(xml)
         if children is None or len(children) < 1:
             raise Exception('Illegal element node')
         self.description = children[0].firstChild.data
@@ -105,13 +117,14 @@ class Class:
     fields: Dict[str, Field]
 
     def __init__(self, xml: Any, objs: List[Tuple[str, Any]]) -> None:
+        self.fields = {}
         self.class_name = xml.getAttribute('class-name')
         if not isinstance(self.class_name, str):
             raise Exception(f'Illegal class name: {self.class_name}')
         if not CLASS_NAME.match(self.class_name):
             raise Exception(f'Illegal class name format: {self.class_name}')
 
-        children = xml.childNodes()
+        children = no_text_children(xml)
         if children is None or len(children) < 2:
             raise Exception('Illegal class')
         self.description = children[0].firstChild.data
@@ -151,7 +164,7 @@ class ListField(Field):
 
     def __init__(self, xml: Any, objs: List[Tuple[str, Object]]) -> None:
         super().__init__(xml)
-        children = xml.childNodes()
+        children = no_text_children(xml)
         if len(children) < 3:
             raise Exception('Illegal list field node')
 
@@ -181,7 +194,7 @@ class ListElement(Element):
 
     def __init__(self, xml: Any, objs: List[Tuple[str, Object]]) -> None:
         super().__init__(xml)
-        children = xml.childNodes()
+        children = no_text_children(xml)
         if len(children) < 2:
             raise Exception('Illegal list element node')
 
@@ -209,7 +222,7 @@ class ObjectField(Field, Object):
     """
 
     def __init__(self, xml: Any, objs: List[Tuple[str, Object]]) -> None:
-        super(Field, self).__init__(xml)
+        super().__init__(xml)
         class_name = xml.getAttribute('class-name')
         if not isinstance(class_name, str):
             raise Exception(f'Illegal class name: {class_name}')
@@ -223,7 +236,7 @@ class ObjectElement(Element, Object):
     obj_class: Class
 
     def __init__(self, xml: Any, objs: List[Tuple[str, Object]]) -> None:
-        super(Element, self).__init__(xml)
+        super().__init__(xml)
         class_name = xml.getAttribute('class-name')
         if not isinstance(class_name, str):
             raise Exception(f'Illegal class name: {class_name}')
@@ -242,7 +255,7 @@ class APIData:
     def __init__(self, xml: Any) -> None:
         objs: List[Tuple[str, Object]] = []
         self.classes = {}
-        children = xml.childNodes()
+        children = no_text_children(xml)
         if children is None or len(children) < 3:
             raise Exception('Illegal api data')
         self.api_path = children[0].firstChild.data
@@ -258,13 +271,14 @@ class APIData:
                 self.type != 'ws-response':
             raise Exception('Illegal api data type')
 
-        self.main_class = Class(children[2], objs)
+        self.main_class = Class(no_text_children(children[2])[0], objs)
 
         if len(children) == 4:
             classes_node = children[3]
-            if len(classes_node.childNodes()) == 0:
+            classes_children = no_text_children(classes_node)
+            if len(classes_children) == 0:
                 raise Exception('Illegal classes')
-            for class_node in classes_node.childNodes():
+            for class_node in classes_children:
                 class_var = Class(class_node, objs)
                 self.classes[class_var.class_name] = class_var
 

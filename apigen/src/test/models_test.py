@@ -17,5 +17,5 @@ class TestModels(TestCase):
         从有效的xml文档测试models
         """
         xml = parse(os.path.abspath(os.curdir + '/apis/test/test.xml'))
-        test_data = APIData(xml)
+        test_data = APIData(xml.childNodes[1])
         self.assertEqual(test_data.main_class.class_name, 'Test')
