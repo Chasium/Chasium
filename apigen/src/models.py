@@ -24,6 +24,12 @@ def no_text_children(xml: Any) -> List[Any]:
     return out
 
 
+class ModelsException(Exception):
+    """
+    解析xml失败的异常
+    """
+
+
 class Field:
     """
     IntField，FloatField等的基类
@@ -34,15 +40,15 @@ class Field:
     def __init__(self, xml: Any) -> None:
         children = no_text_children(xml)
         if children is None or len(children) < 2:
-            raise Exception('Illegal field node')
+            raise ModelsException('Illegal field node')
         self.key = children[0].firstChild.data
         self.description = children[1].firstChild.data
         if not isinstance(self.key, str):
-            raise Exception('Illegal key')
+            raise ModelsException('Illegal key')
         if not KEY.match(self.key):
-            raise Exception('Illegal key format')
+            raise ModelsException('Illegal key format')
         if not isinstance(self.description, str):
-            raise Exception('Illegal description')
+            raise ModelsException('Illegal description')
 
 
 class IntField(Field):
@@ -78,10 +84,10 @@ class Element:
     def __init__(self, xml: Any) -> None:
         children = no_text_children(xml)
         if children is None or len(children) < 1:
-            raise Exception('Illegal element node')
+            raise ModelsException('Illegal element node')
         self.description = children[0].firstChild.data
         if not isinstance(self.description, str):
-            raise Exception('Illegal description')
+            raise ModelsException('Illegal description')
 
 
 class IntElement(Element):
@@ -120,16 +126,17 @@ class Class:
         self.fields = {}
         self.class_name = xml.getAttribute('class-name')
         if not isinstance(self.class_name, str):
-            raise Exception(f'Illegal class name: {self.class_name}')
+            raise ModelsException(f'Illegal class name: {self.class_name}')
         if not CLASS_NAME.match(self.class_name):
-            raise Exception(f'Illegal class name format: {self.class_name}')
+            raise ModelsException(
+                f'Illegal class name format: {self.class_name}')
 
         children = no_text_children(xml)
         if children is None or len(children) < 2:
-            raise Exception('Illegal class')
+            raise ModelsException('Illegal class')
         self.description = children[0].firstChild.data
         if not isinstance(self.description, str):
-            raise Exception('Illegal description')
+            raise ModelsException('Illegal description')
         for i in range(1, len(children)):
             field_node = children[i]
             field_name = field_node.nodeName
@@ -166,7 +173,7 @@ class ListField(Field):
         super().__init__(xml)
         children = no_text_children(xml)
         if len(children) < 3:
-            raise Exception('Illegal list field node')
+            raise ModelsException('Illegal list field node')
 
         element_node = children[2]
         element_name = element_node.nodeName
@@ -183,7 +190,7 @@ class ListField(Field):
         elif element_name == 'object-element':
             self.element = ObjectElement(element_node, objs)
         else:
-            raise Exception('Illegal list element')
+            raise ModelsException('Illegal list element')
 
 
 class ListElement(Element):
@@ -196,7 +203,7 @@ class ListElement(Element):
         super().__init__(xml)
         children = no_text_children(xml)
         if len(children) < 2:
-            raise Exception('Illegal list element node')
+            raise ModelsException('Illegal list element node')
 
         element_node = children[1]
         element_name = element_node.nodeName
@@ -213,7 +220,7 @@ class ListElement(Element):
         elif element_name == 'object-element':
             self.element = ObjectElement(element_node, objs)
         else:
-            raise Exception('Illegal list element')
+            raise ModelsException('Illegal list element')
 
 
 class ObjectField(Field, Object):
@@ -225,7 +232,7 @@ class ObjectField(Field, Object):
         super().__init__(xml)
         class_name = xml.getAttribute('class-name')
         if not isinstance(class_name, str):
-            raise Exception(f'Illegal class name: {class_name}')
+            raise ModelsException(f'Illegal class name: {class_name}')
         objs.append((class_name, self))
 
 
@@ -239,7 +246,7 @@ class ObjectElement(Element, Object):
         super().__init__(xml)
         class_name = xml.getAttribute('class-name')
         if not isinstance(class_name, str):
-            raise Exception(f'Illegal class name: {class_name}')
+            raise ModelsException(f'Illegal class name: {class_name}')
         objs.append((class_name, self))
 
 
@@ -257,19 +264,19 @@ class APIData:
         self.classes = {}
         children = no_text_children(xml)
         if children is None or len(children) < 3:
-            raise Exception('Illegal api data')
+            raise ModelsException('Illegal api data')
         self.api_path = children[0].firstChild.data
         if not isinstance(self.api_path, str):
-            raise Exception('Illegal api path')
+            raise ModelsException('Illegal api path')
         if not API_PATH.match(self.api_path):
-            raise Exception(f'Illegal api path format: {self.api_path}')
+            raise ModelsException(f'Illegal api path format: {self.api_path}')
 
         self.type = children[1].nodeName
         if self.type != 'http-request' and \
                 self.type != 'http-response' and \
                 self.type != 'ws-request' and \
                 self.type != 'ws-response':
-            raise Exception('Illegal api data type')
+            raise ModelsException('Illegal api data type')
 
         self.main_class = Class(no_text_children(children[2])[0], objs)
 
@@ -277,7 +284,7 @@ class APIData:
             classes_node = children[3]
             classes_children = no_text_children(classes_node)
             if len(classes_children) == 0:
-                raise Exception('Illegal classes')
+                raise ModelsException('Illegal classes')
             for class_node in classes_children:
                 class_var = Class(class_node, objs)
                 self.classes[class_var.class_name] = class_var
@@ -290,4 +297,4 @@ class APIData:
             elif obj_name in self.classes:
                 obj.obj_class = self.classes[obj_name]
             else:
-                raise Exception(f'Class {obj_name} does not exist')
+                raise ModelsException(f'Class {obj_name} does not exist')
