@@ -5,7 +5,7 @@
 <!ELEMENT ws-request EMPTY>
 <!ELEMENT ws-response EMPTY>
 <!ELEMENT main-class (class)>
-<!ELEMENT class ((description),(int|float|bool|string|list|object)+)>
+<!ELEMENT class (description,(int|float|bool|string|list|object)+)>
 <!ATTLIST class class-name ID #REQUIRED>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT int (key,description)>
@@ -21,6 +21,6 @@
 <!ELEMENT list-element (description,(int-element|float-element|bool-element|string-element|list-element|object-element))>
 <!ELEMENT object-element (description)>
 <!ATTLIST object-element class-name IDREF #REQUIRED>
-<!ELEMENT object (description)>
+<!ELEMENT object (key, description)>
 <!ATTLIST object class-name IDREF #REQUIRED>
 <!ELEMENT classes (class+)>

@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Apigen单元测试",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/apigen/test.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+      "cwd": "${workspaceFolder}/apigen"
+    },
+    {
       "name": "运行并调试后端",
       "type": "python",
       "request": "launch",
