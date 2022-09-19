@@ -1,12 +1,12 @@
 """
-用于生成Typescript代码
+用于生成Python代码
 """
 from src.models import APIData
 
 
-class TsModel:
+class PyModel:
     """
-    Typescript类生成类
+    Python类生成类
     """
 
     def __init__(self, data: APIData) -> None:
@@ -21,10 +21,10 @@ class TsModel:
 
     def content(self) -> str:
         """
-        生成的Typescript文件的内容
+        生成的Python文件的内容
         """
-        # TODO: 返回由构造函数中给出的APIData生成的Typescript文件的全部内容
-        # APIData中，classes里的每个类对应一个interface
+        # TODO: 返回由构造函数中给出的APIData生成的Python文件的全部内容
+        # APIData中，classes里的每个类对应一个Python类
         # 举例：以下xml文档
         #
         # <classes>
@@ -39,21 +39,23 @@ class TsModel:
         #     <class class-name="B">...</class>
         # </classes>
         #
-        # 对应的APIData应该被转化为如下Typescript代码：
+        # 对应的APIData应该被转化为如下Python代码：
         #
-        # /**
-        #  * xxx
-        #  */
-        # interface A {
-        #     /**
-        #      * yyy
-        #      */
-        #     a: number;
+        # from flask import Request
+        #
+        #
+        # class A:
+        #     """
+        #     xxx
+        #     """
+        #     a: int  # yyy
         #     ...
-        # }
+        #     def __init__(self, request: Request):
+        #         self.a = request.json["a"]
+        #         ...
         #
-        # interface B {
+        #
+        # class B:
         #     ...
-        # }
         #
-        # 另外，main_class需要根据以上规则转化为export default interface
+        # 另外，main_class也需要根据以上规则转化成一个类
