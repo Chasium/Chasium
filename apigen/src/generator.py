@@ -8,7 +8,8 @@ class Generator:
     """
     生成器类
     """
-    def generate(xml_path: str, output_path: str) -> None:
+
+    def generate(self, xml_path: str, output_path: str) -> None:
         """
         生成一个ts文件和一个py文件
         """
