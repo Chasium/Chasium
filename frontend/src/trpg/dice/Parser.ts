@@ -61,6 +61,28 @@ export default class Parser {
                 numStack.push(
                     new MonoOpNode(token, this.parseInNeg(token, tokens))
                 );
+            } else {
+                if (opStack.length == 0) {
+                    opStack.push(token);
+                } else {
+                    const priority = PRIORITIES.get(token.type);
+                    const stackPriority = PRIORITIES.get(
+                        opStack[opStack.length - 1].type as
+                            | TokenType.ADD
+                            | TokenType.SUB
+                            | TokenType.MUL
+                            | TokenType.DIV
+                            | TokenType.DIC
+                    );
+                    if (
+                        priority != null &&
+                        stackPriority != null &&
+                        priority < stackPriority
+                    ) {
+                        this.popStacks(numStack, opStack);
+                    }
+                    opStack.push(token);
+                }
             }
         }
     }

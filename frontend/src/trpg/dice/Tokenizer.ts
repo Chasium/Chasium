@@ -110,6 +110,21 @@ export default class Tokenizer {
                 }
             }
         }
+
+        if (currentState == State.READING_NUM) {
+            if (readingNum.length > 1 && readingNum[0] == '0') {
+                throw Error(
+                    `Illegal number '${readingNum}' at position ${
+                        readingNumOffset + 1
+                    }: a number cannot start with 0`
+                );
+            }
+            this.tokens.push({
+                type: TokenType.NUM,
+                value: parseInt(readingNum),
+                index: readingNumOffset,
+            });
+        }
     }
 
     nextToken() {
