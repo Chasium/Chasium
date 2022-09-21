@@ -41,7 +41,7 @@ export default class Tokenizer {
                 } else if (/\s/.test(char)) {
                     continue;
                 } else {
-                    throw Error(`Illegal ${char} at position ${i + 1}`);
+                    throw Error(`Illegal '${char}' at position ${i + 1}`);
                 }
             } else if (currentState == State.READING_NUM) {
                 if (/[0-9]/.test(char)) {
@@ -49,7 +49,7 @@ export default class Tokenizer {
                 } else {
                     if (readingNum.length > 1 && readingNum[0] == '0') {
                         throw Error(
-                            `Illegal number ${readingNum} at position ${
+                            `Illegal number '${readingNum}' at position ${
                                 readingNumOffset + 1
                             }: a number cannot start with 0`
                         );
@@ -81,7 +81,7 @@ export default class Tokenizer {
                     } else if (/\s/.test(char)) {
                         currentState = State.READ_NUM;
                     } else {
-                        throw Error(`Illegal ${char} at position ${i + 1}`);
+                        throw Error(`Illegal '${char}' at position ${i + 1}`);
                     }
                 }
             } else if (currentState == State.READ_NUM) {
@@ -106,7 +106,7 @@ export default class Tokenizer {
                 } else if (/\s/.test(char)) {
                     currentState = State.READ_NUM;
                 } else {
-                    throw Error(`Illegal ${char} at position ${i + 1}`);
+                    throw Error(`Illegal '${char}' at position ${i + 1}`);
                 }
             }
         }
