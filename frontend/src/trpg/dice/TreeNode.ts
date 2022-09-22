@@ -39,7 +39,7 @@ export class BiOpNode implements TreeNode {
             let out = 0;
             const lValue = this.lChild.value();
             for (let i = 0; i < lValue; i++) {
-                out += Math.floor(Math.random() * (this.rChild.value() + 1));
+                out += Math.ceil(Math.random() * this.rChild.value());
             }
             return out;
         } else {

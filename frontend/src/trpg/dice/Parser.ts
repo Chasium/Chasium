@@ -62,43 +62,78 @@ export default class Parser {
                     new MonoOpNode(token, this.parseInNeg(token, tokens))
                 );
             } else {
-                if (opStack.length == 0) {
-                    opStack.push(token);
-                } else {
-                    const priority = PRIORITIES.get(token.type);
-                    const stackPriority = PRIORITIES.get(
-                        opStack[opStack.length - 1].type as
-                            | TokenType.ADD
-                            | TokenType.SUB
-                            | TokenType.MUL
-                            | TokenType.DIV
-                            | TokenType.DIC
-                    );
-                    if (
-                        priority != null &&
-                        stackPriority != null &&
-                        priority < stackPriority
-                    ) {
-                        this.popStacks(numStack, opStack);
-                    }
-                    opStack.push(token);
-                }
+                this.popStacks(numStack, opStack, token);
             }
         }
     }
 
-    private popStacks(numStack: TreeNode[], opStack: OpToken[]): TreeNode {
-        for (;;) {
-            if (opStack.length == 0) {
-                return numStack[0];
-            } else {
-                const rNum = numStack.pop();
-                const lNum = numStack.pop();
-                const op = opStack.pop();
-                if (rNum == null || lNum == null || op == null) {
+    private popStacks(
+        numStack: TreeNode[],
+        opStack: OpToken[],
+        newToken?: OpToken
+    ): TreeNode {
+        if (opStack.length == 0) {
+            if (newToken != null) {
+                opStack.push(newToken);
+            }
+            return numStack[0];
+        } else {
+            if (newToken != null) {
+                const newPriority = PRIORITIES.get(
+                    newToken.type as
+                        | TokenType.ADD
+                        | TokenType.SUB
+                        | TokenType.MUL
+                        | TokenType.DIV
+                        | TokenType.DIC
+                );
+                if (newPriority == null) {
                     throw Error('Unknown error');
                 }
-                numStack.push(new BiOpNode(op, lNum, rNum));
+                for (;;) {
+                    if (opStack.length == 0) {
+                        opStack.push(newToken);
+                        return numStack[numStack.length - 1];
+                    } else {
+                        const oldPriority = PRIORITIES.get(
+                            opStack[opStack.length - 1].type as
+                                | TokenType.ADD
+                                | TokenType.SUB
+                                | TokenType.MUL
+                                | TokenType.DIV
+                                | TokenType.DIC
+                        );
+                        if (oldPriority == null) {
+                            throw Error('Unknown error');
+                        }
+                        if (newPriority <= oldPriority) {
+                            const rNum = numStack.pop();
+                            const lNum = numStack.pop();
+                            const op = opStack.pop();
+                            if (rNum == null || lNum == null || op == null) {
+                                throw Error('Unknown error');
+                            }
+                            numStack.push(new BiOpNode(op, lNum, rNum));
+                        } else {
+                            opStack.push(newToken);
+                            return numStack[numStack.length - 1];
+                        }
+                    }
+                }
+            } else {
+                for (;;) {
+                    if (opStack.length == 0) {
+                        return numStack[numStack.length - 1];
+                    } else {
+                        const rNum = numStack.pop();
+                        const lNum = numStack.pop();
+                        const op = opStack.pop();
+                        if (rNum == null || lNum == null || op == null) {
+                            throw Error('Unknown error');
+                        }
+                        numStack.push(new BiOpNode(op, lNum, rNum));
+                    }
+                }
             }
         }
     }
