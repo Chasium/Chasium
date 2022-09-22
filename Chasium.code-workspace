@@ -50,6 +50,7 @@
   "extensions": {
     "recommendations": [
       "dbaeumer.vscode-eslint",
+      "eamodio.gitlens",
       "emmanuelbeziat.vscode-great-icons",
       "esbenp.prettier-vscode",
       "formulahendry.vscode-mysql",
