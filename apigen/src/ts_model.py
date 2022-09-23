@@ -1,6 +1,7 @@
 """
 用于生成Typescript代码
 """
+from dataclasses import field
 from src.models import APIData
 
 
@@ -10,19 +11,61 @@ class TsModel:
     """
 
     def __init__(self, data: APIData) -> None:
-        # TODO: 初始化（完成后或不需要完成的情况下删除该TODO）
-        pass
+        self.__apiData = data
 
     def class_name(self) -> str:
         """
         主类的类名
         """
-        # TODO: 返回构造函数中给出的APIData的main_class的class_name
+        # 返回构造函数中给出的APIData的main_class的class_name
+        return self.__apiData.main_class.class_name
+
+    def get_type(self, fieldType: str, fieldNode) -> str:
+        if fieldType == "bool":
+            fieldType = "boolean"
+        elif fieldType == "int" or fieldType == "float":
+            fieldType = "number"
+        elif fieldType == "list":
+            fieldType = "Array"
+            listType = self.get_type(
+                str(type(fieldNode.element))[19: -9].lower(), fieldNode.element)
+            fieldType += "<" + listType + ">"
+        return fieldType
 
     def content(self) -> str:
         """
         生成的Typescript文件的内容
         """
+        tsContent = ""
+
+        main_class = self.__apiData.main_class
+        tsContent += ("/**\n * " + main_class.description + "\n */\n")
+        tsContent += "export default interface " + \
+            main_class.class_name + " {\n"
+        fields = main_class.fields
+        for key2 in fields:
+            tsContent += ("\t/**\n\t * " +
+                          fields[key2].description + "\n\t */\n")
+            tsContent += ("\t" + key2 + ": ")
+            fieldType = self.get_type(str(type(fields[key2]))[
+                                      19: -7].lower(), fields[key2])
+            tsContent += (fieldType + ";\n")
+        tsContent += "}\n"
+
+        classes = self.__apiData.classes
+        for key in classes:
+            tsContent += ("/**\n * " + classes[key].description + "\n */\n")
+            tsContent += "interface " + classes[key].class_name + " {\n"
+            fields = classes[key].fields
+            for key2 in fields:
+                tsContent += ("\t/**\n\t * " +
+                              fields[key2].description + "\n\t */\n")
+                tsContent += ("\t" + key2 + ": ")
+                fieldType = self.get_type(str(type(fields[key2]))[
+                    19: -7].lower(), fields[key2])
+                tsContent += (fieldType + ";\n")
+            tsContent += "}\n"
+        return tsContent
         # TODO: 返回由构造函数中给出的APIData生成的Typescript文件的全部内容
         # APIData中，classes里的每个类对应一个interface
         # 举例：以下xml文档
