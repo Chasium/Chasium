@@ -3,7 +3,7 @@
 """
 import os
 from xml.dom.minidom import parse
-from src.models import APIData, ModelsException
+from src.models import APIData
 
 from src.py_model import PyModel
 from src.ts_model import TsModel
