@@ -14,4 +14,4 @@ if __name__ == "__main__":
         if TEST_PATH.match(file) is None:
             print(file)
             xml_file = Generator()
-            xml_file.generate(file, f[5:])
+            xml_file.generate(file, file[5:])
