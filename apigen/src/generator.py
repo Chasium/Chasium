@@ -13,8 +13,8 @@ class Generator:
     """
     生成器类
     """
-    front_path: str = '.'
-    end_path: str = '.'
+    PY_PATH: str = '../backend'
+    TS_PATH: str = '../frontend/src'
 
     def generate(self, xml_path: str, output_path: str) -> None:
         """
@@ -26,7 +26,7 @@ class Generator:
 
         # 调用PyModel，在{后端根目录}/generated/{output_path}下创建一个py文件
         py_xml = PyModel(xml_data)
-        py_path = self.front_path + "/generated/" + output_path
+        py_path = self.PY_PATH + "/generated/" + output_path
         if os.path.isdir(py_path):
             pass
         else:
@@ -38,7 +38,7 @@ class Generator:
 
         # 调用TsModel，在{前端根目录}/src/generated/{output_path}下创建一个ts文件
         ts_xml = TsModel(xml_data)
-        ts_path = self.front_path + "/generated/" + output_path
+        ts_path = self.TS_PATH + "/generated/" + output_path
         if os.path.isdir(ts_path):
             pass
         else:
