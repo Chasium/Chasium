@@ -1,0 +1,54 @@
+<!DOCTYPE api-data SYSTEM "../../dtd/api-data.dtd">
+<api-data>
+    <api-path>/a/b/c</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="Test">
+            <description>测试用类1</description>
+            <int>
+                <key>a1</key>
+                <description>一个int</description>
+            </int>
+            <list>
+                <key>a2</key>
+                <description>一个list</description>
+                <list-element>
+                    <description>一个list</description>
+                    <object-element class-name="Test1">
+                        <description>list的元素</description>
+                    </object-element>
+                    <object-element class-name="Test2">
+                        <description>list的元素2</description>
+                    </object-element>
+                </list-element>
+            </list>
+        </class>
+    </main-class>
+    <classes>
+        <class class-name="Test1">
+            <description>测试用类1临时类1</description>
+            <bool>
+                <key>aAbBcCDDe</key>
+                <description>一个bool</description>
+            </bool>
+            <int>
+                <key>b</key>
+                <description>一个int</description>
+            </int>
+            <list>
+                <key>c</key>
+                <description>一个list</description>
+                <int-element class-name="intElement">
+                    <description>list的元素</description>
+                </int-element>
+            </list>
+        </class>
+        <class class-name="Test2">
+            <description>测试用类2临时类1</description>
+            <string>
+                <key>d</key>
+                <description>一个string</description>
+            </string>
+        </class>
+    </classes>
+</api-data>
