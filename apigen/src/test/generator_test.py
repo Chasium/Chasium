@@ -24,11 +24,11 @@ class TestGenerator(TestCase):
                 from src.generator import Generator  # pylint:disable=import-outside-toplevel
                 generator = Generator()
                 generator.generate("apis/test/test.xml", "qqwwee")
-                f = open(generator.end_path + "/generated/" +
+                f = open(generator.TS_PATH + "/generated/" +
                          "qqwwee" + "/" + "B" + ".py", encoding='utf-8')
                 self.assertEqual(f.read(), 'bbbbb')
                 f.close()
-                f = open(generator.end_path + "/generated/" +
+                f = open(generator.TS_PATH + "/generated/" +
                          "qqwwee" + "/" + "A" + ".ts", encoding='utf-8')
                 self.assertEqual(f.read(), 'aaaaa')
                 f.close()
