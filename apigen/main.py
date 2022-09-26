@@ -3,6 +3,7 @@
 """
 import re
 import glob
+from src.models import ModelsException
 from src.generator import Generator
 
 TEST_PATH = re.compile(r'apis\\test\\')
@@ -14,4 +15,7 @@ if __name__ == "__main__":
         if TEST_PATH.match(file) is None:
             print(file)
             xml_file = Generator()
-            xml_file.generate(file, f[5:])
+            try:
+                xml_file.generate(file, file[5:])
+            except ModelsException as e:
+                print(e)
