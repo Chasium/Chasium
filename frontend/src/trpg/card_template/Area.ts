@@ -8,6 +8,7 @@ export enum AreaType {
 export class Area {
     rows: Row[] = [];
     constructor(
+        public id: number,
         public type: AreaType,
         public needCheck: boolean,
         public checkScript: string,

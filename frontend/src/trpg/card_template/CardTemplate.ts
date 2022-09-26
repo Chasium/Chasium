@@ -1,7 +1,7 @@
-import type { Row } from './Row';
+import type { Column } from './Column';
 
 export default class CardTemplate {
-    rows: Row[] = [];
+    columns: Column[] = [];
     constructor(
         public name: string,
         public description: string,

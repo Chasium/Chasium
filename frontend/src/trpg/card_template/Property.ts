@@ -48,6 +48,13 @@ export interface IStringProperty extends IBasicProperty {
     type: PropertyType.STRING;
 }
 
+export interface ISelectionProperty extends IProperty {
+    type: PropertyType.SELECTION;
+    valueClassScript: string;
+    needCheck: boolean;
+    checkScript: string;
+}
+
 export interface ICalculatedProperty extends IProperty {
     type:
         | PropertyType.CALCULATED_INT
@@ -98,6 +105,7 @@ export type Property =
     | IFloatProperty
     | IBoolProperty
     | IStringProperty
+    | ISelectionProperty
     | ICalculatedIntProperty
     | ICalculatedFloatProperty
     | ICalculatedBoolProperty
@@ -145,6 +153,17 @@ export class StringProperty implements IStringProperty {
     constructor(
         public id: number,
         public nameScript: string,
+        public needCheck: boolean,
+        public checkScript: string
+    ) {}
+}
+
+export class SelectionProperty implements ISelectionProperty {
+    type: PropertyType.SELECTION = PropertyType.SELECTION;
+    constructor(
+        public id: number,
+        public nameScript: string,
+        public valueClassScript: string,
         public needCheck: boolean,
         public checkScript: string
     ) {}
