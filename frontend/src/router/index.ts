@@ -15,6 +15,11 @@ const router = createRouter({
             name: 'template-edit',
             component: TemplateEditView,
         },
+        {
+            path: '/register',
+            name: 'register',
+            component: RegisterView,
+        },
     ],
 });
 
