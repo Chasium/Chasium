@@ -26,9 +26,7 @@
                 <div class="reminder" v-show="showPass">密码不能为空</div>
                 <div class="login user-data">
                     <div class="container">
-                        <button class="button is-dark" @click="login">
-                            登录
-                        </button>
+                        <a class="button is-dark" @click="login"> 登录 </a>
                     </div>
                 </div>
             </el-form>
@@ -43,6 +41,7 @@
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import type LoginResponse from '@/generated/login/LoginResponse';
+import { useUserStore } from '@/stores/user';
 
 export default defineComponent({
     data() {
@@ -56,6 +55,11 @@ export default defineComponent({
             },
         };
     },
+    computed: {
+        userStore() {
+            return useUserStore();
+        },
+    },
     methods: {
         async login() {
             this.showPass = false;
@@ -66,15 +70,27 @@ export default defineComponent({
                 return;
             } else if (this.form.password == '') {
                 this.showPass = true;
+                this.showUser = false;
                 return;
             }
             console.log(this.form.userName);
-            let response = await axios.post<LoginResponse>('/user/login', {
-                userName: this.form.userName,
-                password: this.form.password,
-            });
+            try {
+                let response = await axios.post<LoginResponse>('/user/login', {
+                    userName: this.form.userName,
+                    password: this.form.password,
+                });
 
-            if (response.data.code === 0) {
+                if (response.data.code === 0) {
+                    this.userStore.userName = this.form.userName;
+                    this.userStore.session = response.data.session;
+                    this.userStore.loggedIn = true;
+                }
+                //TODO: 根据后端接口设置else内容
+                else {
+                    alert('未知错误');
+                }
+            } catch (err) {
+                alert('异常');
             }
         },
     },
@@ -92,7 +108,7 @@ export default defineComponent({
 }
 .title {
     text-align: center;
-    padding-top: 150px;
+    padding-top: calc((100vh - 20rem) * 3 / 7 - 2.5em);
     font-size: 45px;
 }
 .login-main {
@@ -123,11 +139,17 @@ export default defineComponent({
     margin-top: 3em;
     .container {
         width: fit-content;
-        button {
+        a.button {
             height: 1.5em;
             width: 10em;
         }
     }
+}
+.reminder {
+    font-size: small;
+    text-align: center;
+    color: crimson;
+    line-height: 0.1em;
 }
 .user-data {
     margin-bottom: 2em;

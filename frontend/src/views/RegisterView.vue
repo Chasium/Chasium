@@ -4,12 +4,12 @@
             <div class="register-title">注 册</div>
             <el-form label-width="75px" label-position="left">
                 <el-form-item label="用户名:" class="user-data">
-                    <input v-model="userName" placeholder="请输入用户名" />
+                    <input v-model="form.userName" placeholder="请输入用户名" />
                 </el-form-item>
                 <el-form-item label="密码:" class="user-data">
                     <input
                         type="password"
-                        v-model="password"
+                        v-model="form.password"
                         show-password
                         placeholder="请输入密码"
                     />
@@ -17,16 +17,23 @@
                 <el-form-item label="确认密码:" class="user-data">
                     <input
                         type="password"
-                        v-model="confirmPassword"
+                        v-model="form.confirmPassword"
                         show-password
                         placeholder="请再次输入密码"
                     />
                 </el-form-item>
+                <div class="reminder" v-show="showReUser">
+                    您输入用户名已被注册，请重新输入
+                </div>
+                <div class="reminder" v-show="showUser">用户名不能为空</div>
+                <div class="reminder" v-show="showPass">密码不能为空</div>
+                <div class="reminder" v-show="showConfirmPass">请确认密码</div>
+                <div class="reminder" v-show="showPassNotMatch">
+                    两次输入密码不一致
+                </div>
                 <div class="register user-data">
                     <div class="container">
-                        <button class="button is-dark" @click="test">
-                            注册
-                        </button>
+                        <a class="button is-dark" @click="createUser"> 注册 </a>
                     </div>
                 </div>
             </el-form>
@@ -38,17 +45,57 @@
 </template>
 
 <script lang="ts">
-class Data {
-    userName: string = '';
-    password: string = '';
-    confirmPassword: string = '';
-}
+import { throwStatement } from '@babel/types';
+import { parseStringStyle } from '@vue/shared';
+import axios from 'axios';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     data() {
-        return new Data();
+        return {
+            showReUser: false,
+            showUser: false,
+            showPass: false,
+            showConfirmPass: false,
+            showPassNotMatch: false,
+            form: {
+                userName: '', //用户名
+                password: '', //用户密码
+                confirmPassword: '', //确认密码
+            },
+        };
     },
-};
+    methods: {
+        async createUser() {
+            this.showUser = false;
+            this.showReUser = false;
+            this.showPass = false;
+            this.showConfirmPass = false;
+            this.showPassNotMatch = false;
+            if (this.form.userName == '') {
+                this.showUser = true;
+                return;
+            } else if (this.form.password == '') {
+                this.showPass = true;
+                this.showUser = false;
+                return;
+            } else if (this.form.confirmPassword == '') {
+                this.showConfirmPass = true;
+                return;
+            } else if (this.form.password != this.form.confirmPassword) {
+                this.showPassNotMatch = true;
+                return;
+            }
+            console.log(this.form.userName);
+            try {
+                console.log('');
+                // TODO: 注册设置response
+            } catch (err) {
+                alert('异常');
+            }
+        },
+    },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -60,7 +107,7 @@ export default {
         'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 .register-main {
-    height: 20rem;
+    height: 22rem;
     width: 15rem;
     position: fixed;
     top: calc((100vh - 20rem) * 3 / 7);
@@ -82,14 +129,20 @@ export default {
     font-weight: lighter;
 }
 .register {
-    margin-top: 2em;
+    margin-top: 2.5em;
     .container {
         width: fit-content;
-        button {
+        a.button {
             height: 1.5em;
             width: 10em;
         }
     }
+}
+.reminder {
+    font-size: small;
+    text-align: center;
+    color: crimson;
+    line-height: 0.1em;
 }
 .user-data {
     margin-bottom: 1.5em;
