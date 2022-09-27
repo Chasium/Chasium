@@ -1,0 +1,18 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/user/login</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="LoginRequest">
+            <description>登录请求</description>
+            <string>
+                <key>userName</key>
+                <description>用户名</description>
+            </string>
+            <string>
+                <key>password</key>
+                <description>密码</description>
+            </string>
+        </class>
+    </main-class>
+</api-data>
