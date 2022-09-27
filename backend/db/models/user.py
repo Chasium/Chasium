@@ -7,7 +7,7 @@ class UserData(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
-    password = Column(String(120), unique=True)
+    password = Column(String(120), unique=False)
 
     def __init__(self, name, password):
         self.name = name

@@ -8,12 +8,11 @@ from db.models.user import UserData
 # from werkzeug.security import check_password_hash, generate_password_hash
 
 
-# auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, url_prefix='')
 
 
-@auth_bp.route("/user/<user>")
-def user(user):
+@auth_bp.route("/<user>")
+def userGreet(user):
     return f'''
         <p>Hello, {escape(user)}!</p>
     '''
@@ -56,7 +55,7 @@ def login():
                     'username': username, 'password': password}
                 # return 'login successfully'
 
-                return redirect(url_for('user'), user=username)
+                return redirect(url_for('auth.userGreet', user=username))
             else:
                 print(error)
                 # return error
@@ -99,12 +98,11 @@ def register():
 
             if error is None:
                 # verified, register user
-                print('New user created')
                 addUser(username, password)
                 loginUser(username)
                 # return 'register successfully'
 
-                return redirect(url_for('login'))
+                return redirect(url_for('auth.userGreet', user=username))
             else:
                 print(error)
                 # return error
@@ -122,7 +120,6 @@ def register():
 # Verifications
 
 def userIsExisted(username):
-    print('check user existence')
     user = db.session.query(UserData).filter_by(name=username).first()
     return True if user else False
 
@@ -149,6 +146,7 @@ def addUser(username, password):
     new_user = UserData(username, password)
     db.session.add(new_user)
     db.session.commit()
+    print('New user created')
     return
 
 
@@ -159,6 +157,7 @@ def loginUser(username):
     if current_user:
         session['username'] = current_user.name
         session['userid'] = current_user.id
+        print('user', username, 'login!')
     else:
         # raise error: undefined user
         pass
@@ -173,12 +172,14 @@ def userIsLogged(username):
     return False
 
 
+@auth_bp.route('/logout')
 def logout():
     username = session.pop('username', None)
     session.pop('userid', None)
     if username:
         print('{} logged out successfully!'.format(username))
-    return 'logout'
+    # return 'logout'
+    return redirect(url_for('auth.login'))
 
 
 '''

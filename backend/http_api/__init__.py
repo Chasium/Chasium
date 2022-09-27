@@ -6,4 +6,5 @@ from flask import Flask
 from . import auth
 
 http_api = Flask(__name__)
+http_api.secret_key = "secret_key"
 http_api.register_blueprint(auth.auth_bp)
