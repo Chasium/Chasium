@@ -325,7 +325,7 @@ export default defineComponent({
                 );
                 children.splice(index, 1);
             }
-            const children: Tree[] = parentData.children || parentData;
+            const children: Tree[] = parentData.children;
             const index = children.findIndex((d) => d.id === data.id);
             children.splice(index, 1);
         },
