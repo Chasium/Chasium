@@ -1,13 +1,12 @@
 <template>
-    <div class="background">
-        <div class="login-title card">
-            <h1>登&nbsp;录</h1>
-        </div>
+    <el-container>
+        <el-header class="title">Chasium 在线TRPG平台</el-header>
         <div class="login-main card">
+            <div class="login-title">登 录</div>
             <el-form>
                 <el-form-item class="user-data">
                     <input
-                        v-model="userName"
+                        v-model="form.userName"
                         placeholder="用户名"
                         class="input_data"
                     />
@@ -15,16 +14,19 @@
                 <el-form-item class="user-data">
                     <input
                         type="password"
-                        v-model="password"
+                        v-model="form.password"
                         show-password
                         placeholder="密码"
                     />
                 </el-form-item>
+                <div class="reminder" v-show="showReminder">
+                    您输入的密码错误,请重新输入
+                </div>
+                <div class="reminder" v-show="showUser">用户名不能为空</div>
+                <div class="reminder" v-show="showPass">密码不能为空</div>
                 <div class="login user-data">
                     <div class="container">
-                        <button class="button is-dark" @click="test">
-                            登录
-                        </button>
+                        <a class="button is-dark" @click="login"> 登录 </a>
                     </div>
                 </div>
             </el-form>
@@ -32,24 +34,64 @@
                 <router-link to="/register">注册新账户</router-link>
             </div>
         </div>
-    </div>
+    </el-container>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
-class Data {
-    userName: string = '';
-    password: string = '';
-}
+import axios from 'axios';
+import type LoginResponse from '@/generated/login/LoginResponse';
+import { useUserStore } from '@/stores/user';
 
 export default defineComponent({
     data() {
-        return new Data();
+        return {
+            showReminder: false,
+            showUser: false,
+            showPass: false,
+            form: {
+                userName: '', //用户名
+                password: '', //用户密码
+            },
+        };
+    },
+    computed: {
+        userStore() {
+            return useUserStore();
+        },
     },
     methods: {
-        test() {
-            console.log(this.userName);
+        async login() {
+            this.showPass = false;
+            this.showReminder = false;
+            this.showPass = false;
+            if (this.form.userName == '') {
+                this.showUser = true;
+                return;
+            } else if (this.form.password == '') {
+                this.showPass = true;
+                this.showUser = false;
+                return;
+            }
+            console.log(this.form.userName);
+            try {
+                let response = await axios.post<LoginResponse>('/user/login', {
+                    userName: this.form.userName,
+                    password: this.form.password,
+                });
+
+                if (response.data.code === 0) {
+                    this.userStore.userName = this.form.userName;
+                    this.userStore.session = response.data.session;
+                    this.userStore.loggedIn = true;
+                }
+                //TODO: 根据后端接口设置else内容
+                else {
+                    alert('未知错误');
+                }
+            } catch (err) {
+                alert('异常');
+            }
         },
     },
 });
@@ -57,17 +99,26 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import 'bulma/bulma.sass';
-.background {
-    width: 100vw;
+
+.el-container {
     height: 100vh;
+    width: 100vw;
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+        'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+}
+.title {
+    text-align: center;
+    padding-top: calc((100vh - 20rem) * 3 / 7 - 2.5em);
+    font-size: 45px;
 }
 .login-main {
-    height: 16rem;
+    height: 20rem;
     width: 15rem;
     position: fixed;
-    top: calc((100vh - 20rem) * 2 / 5);
-    left: calc((100vw - 15rem) / 2);
+    top: calc((100vh - 20rem) * 3 / 7);
     padding: 2rem;
+    left: 50%;
+    transform: translate(-50%, 0);
 
     input {
         width: 100%;
@@ -79,15 +130,7 @@ export default defineComponent({
 }
 .login-title {
     font-size: 36px;
-    line-height: 40px;
-    position: fixed;
-    width: 15rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-bottom: 0.6rem;
-    padding-top: 0.6rem;
-    left: calc((100vw - 15rem) / 2);
-    top: calc((100vh - 25rem) * 2 / 5 - 40px);
+    padding-bottom: 2rem;
     text-align: center;
     font-weight: lighter;
 }
@@ -96,11 +139,17 @@ export default defineComponent({
     margin-top: 3em;
     .container {
         width: fit-content;
-        button {
+        a.button {
             height: 1.5em;
             width: 10em;
         }
     }
+}
+.reminder {
+    font-size: small;
+    text-align: center;
+    color: crimson;
+    line-height: 0.1em;
 }
 .user-data {
     margin-bottom: 2em;
@@ -108,6 +157,6 @@ export default defineComponent({
 .create-user {
     width: 100%;
     text-align: end;
-    margin-top: 3em;
+    margin-top: 2em;
 }
 </style>
