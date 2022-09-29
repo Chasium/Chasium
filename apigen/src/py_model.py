@@ -23,45 +23,40 @@ class PyModel:
         """
         生成的Python文件的内容
         """
-        pythonContent = "from flask import Request\n\n\n"
-        classes = self.__apiData.classes
+        python_content = "from flask import Request\n\n\n"
 
+        # 先将main_class转化为class xxx:
         main_class = self.__apiData.main_class
-        pythonContent += ("class " + main_class.class_name + ":\n")
-        pythonContent += ("\t\"\"\"\n\t" +
-                          main_class.description + "\n\t\"\"\"\n")
+        python_content += f"class {main_class.class_name}:\n"
+        # 注释部分
+        python_content += f"\t\"\"\"\n\t{main_class.description}\n\t\"\"\"\n"
         fields = main_class.fields
         for key2 in fields:
-            fieldType = str(type(fields[key2]))[19: -7].lower()
-            if fieldType == 'string':
-                fieldType = 'str'
-            pythonContent += ("\t" + key2 + ': ' +
-                              fieldType + "  # " + fields[key2].description + "\n")
-            # type(fields[key2]))形如 <class src.models.BoolField>
-        pythonContent += "\tdef __init__(self, request: Request):\n"
-        for key2 in fields:
-            pythonContent += ("\t\tself." + key2 +
-                              " = request.json[\"" + key2 + "\"]\n")
-        pythonContent += "\n"
+            # 获得变量类型
+            field_type = str(type(fields[key2]))[19: -7].lower()
+            if field_type == 'string':
+                field_type = 'str'
+            python_content += f"\t{key2}: {field_type}  # {fields[key2].description}\n"
 
+        python_content += "\tdef __init__(self, request: Request):\n"
+        for key2 in fields:
+            python_content += f"\t\tself.{key2} = request.json[\"{key2}\"]\n"
+
+        classes = self.__apiData.classes
         for key in classes:
-            pythonContent += ("class " + classes[key].class_name + ":\n")
-            pythonContent += ("\t\"\"\"\n\t" +
-                              classes[key].description + "\n\t\"\"\"\n")
+            python_content += f"\nclass {classes[key].class_name}:\n"
+            python_content += f"\t\"\"\"\n\t{classes[key].description}\n\t\"\"\"\n"
             fields = classes[key].fields
             for key2 in fields:
-                fieldType = str(type(fields[key2]))[19: -7].lower()
-                if fieldType == 'string':
-                    fieldType = 'str'
-                pythonContent += ("\t" + key2 + ': ' +
-                                  fieldType + "  # " + fields[key2].description + "\n")
-                # type(fields[key2]))形如 <class src.models.BoolField>
-            pythonContent += "\tdef __init__(self, request: Request):\n"
+                field_type = str(type(fields[key2]))[19: -7].lower()
+                if field_type == 'string':
+                    field_type = 'str'
+                python_content += f"\t{key2}: {field_type}  # {fields[key2].description}\n"
+            python_content += "\tdef __init__(self, request: Request):\n"
             for key2 in fields:
-                pythonContent += ("\t\tself." + key2 +
-                                  " = request.json[\"" + key2 + "\"]\n")
-            pythonContent += "\n"
-        return pythonContent
+                python_content += f"\t\tself.{key2} = request.json[\"{key2}\"]\n"
+
+        return python_content
         # TODO: 返回由构造函数中给出的APIData生成的Python文件的全部内容
         # APIData中，classes里的每个类对应一个Python类
         # 举例：以下xml文档

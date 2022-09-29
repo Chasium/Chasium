@@ -4,6 +4,7 @@
 import unittest
 from src.test.models_test import TestModels
 from src.test.generator_test import TestGenerator
+from src.test.content_test import TestContent
 
 
 if __name__ == '__main__':
@@ -15,6 +16,10 @@ if __name__ == '__main__':
 
     suite.addTests([
         TestGenerator("test_generate")
+    ])
+
+    suite.addTests([
+        TestContent("test_content")
     ])
 
     runner = unittest.TextTestRunner(verbosity=2)
