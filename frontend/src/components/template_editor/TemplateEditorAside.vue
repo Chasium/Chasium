@@ -257,6 +257,7 @@ export default defineComponent({
             } else if (data.type == NodeType.COLUMN) {
                 const area = new Area(
                     this.teStore.currentAreaId,
+                    '',
                     AreaType.PERMANENT,
                     false,
                     '',

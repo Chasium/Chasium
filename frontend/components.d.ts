@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AreaPreview: typeof import('./src/components/template_editor/AreaPreview.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElContainer: typeof import('element-plus/es')['ElContainer']
@@ -19,8 +20,10 @@ declare module '@vue/runtime-core' {
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTree: typeof import('element-plus/es')['ElTree']
+    PropertyPreview: typeof import('./src/components/template_editor/PropertyPreview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    RowPreview: typeof import('./src/components/template_editor/RowPreview.vue')['default']
     TemplateEditorAside: typeof import('./src/components/template_editor/TemplateEditorAside.vue')['default']
   }
 }

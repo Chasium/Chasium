@@ -9,6 +9,7 @@ export class Area {
     rows: Row[] = [];
     constructor(
         public id: number,
+        public nameScript: string,
         public type: AreaType,
         public needCheck: boolean,
         public checkScript: string,
