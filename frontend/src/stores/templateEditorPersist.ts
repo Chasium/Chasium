@@ -4,7 +4,7 @@ import type {
     IAreaNode,
     IRowNode,
     IPropertyNode,
-} from '@/components/template_editor/TemplateEditorAside.vue';
+} from '@/trpg/card_template/Tree';
 import CardTemplate from '@/trpg/card_template/CardTemplate';
 import { defineStore } from 'pinia';
 import { useTEStore } from './templateEditor';

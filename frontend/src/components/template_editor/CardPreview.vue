@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ColumnPreview from './ColumnPreview.vue';
-import type { ICardNode, Tree } from './TemplateEditorAside.vue';
+import type { ICardNode, Tree } from '@/trpg/card_template/Tree';
 import type Node from 'element-plus/es/components/tree/src/model/node';
 
 export default defineComponent({

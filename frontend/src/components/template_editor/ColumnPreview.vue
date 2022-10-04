@@ -25,7 +25,7 @@
 import EvalScript from '@/trpg/script/EvalScript';
 import { defineComponent } from 'vue';
 import AreaPreview from './AreaPreview.vue';
-import type { IColumnNode, Tree } from './TemplateEditorAside.vue';
+import type { IColumnNode, Tree } from '@/trpg/card_template/Tree';
 
 export default defineComponent({
     props: {

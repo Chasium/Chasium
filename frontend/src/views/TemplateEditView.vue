@@ -30,11 +30,7 @@
 <script lang="ts">
 import { useTEStore } from '@/stores/templateEditor';
 import { defineComponent } from 'vue';
-import TemplateEditorAside, {
-    NodeType,
-    type ICardNode,
-    type Tree,
-} from '../components/template_editor/TemplateEditorAside.vue';
+import TemplateEditorAside from '../components/template_editor/TemplateEditorAside.vue';
 import CardPreview from '../components/template_editor/CardPreview.vue';
 import { Area, AreaType } from '@/trpg/card_template/Area';
 import { Column } from '@/trpg/card_template/Column';
@@ -42,6 +38,9 @@ import type { Property } from '@/trpg/card_template/Property';
 import { Row } from '@/trpg/card_template/Row';
 import CreatePropertyDialog from '../components/template_editor/CreatePropertyDialog.vue';
 import { refHelper } from '@/utils/refHelper';
+import { type ICardNode, type Tree, NodeType } from '@/trpg/card_template/Tree';
+import { create, property } from 'lodash';
+import { useTEPStore } from '@/stores/templateEditorPersist';
 
 class Data {
     currentTemplate: ICardNode = {
@@ -57,6 +56,9 @@ export default defineComponent({
         teStore() {
             return useTEStore();
         },
+        tepStore() {
+            return useTEPStore();
+        },
         createPropertyDialog() {
             return refHelper(
                 this,
@@ -68,6 +70,7 @@ export default defineComponent({
     components: { TemplateEditorAside, CardPreview, CreatePropertyDialog },
     methods: {
         onCardEdit() {
+            this.tepStore.buildTemplate();
             this.currentTemplate = {
                 ...useTEStore().currentTree[0],
             } as ICardNode;
@@ -180,6 +183,14 @@ export default defineComponent({
         editNode(data: Tree) {
             console.log(data);
         },
+    },
+    mounted() {
+        if (this.teStore.currentTree.length == 0) {
+            this.teStore.buildTree();
+            this.currentTemplate = {
+                ...useTEStore().currentTree[0],
+            } as ICardNode;
+        }
     },
 });
 </script>

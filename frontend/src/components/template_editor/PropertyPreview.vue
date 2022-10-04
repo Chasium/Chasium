@@ -44,7 +44,7 @@
 import { PropertyType } from '@/trpg/card_template/Property';
 import EvalScript from '@/trpg/script/EvalScript';
 import { defineComponent } from 'vue';
-import type { IPropertyNode, Tree } from './TemplateEditorAside.vue';
+import type { IPropertyNode, Tree } from '@/trpg/card_template/Tree';
 
 export default defineComponent({
     props: {

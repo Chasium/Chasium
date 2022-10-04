@@ -58,71 +58,7 @@ import type { Column } from '@/trpg/card_template/Column';
 import type { Area } from '@/trpg/card_template/Area';
 import type { Row } from '@/trpg/card_template/Row';
 import type { Property } from '@/trpg/card_template/Property';
-
-// eslint抽风？？为什么
-// eslint-disable-next-line no-unused-vars
-export enum NodeType {
-    // eslint-disable-next-line no-unused-vars
-    CARD,
-    // eslint-disable-next-line no-unused-vars
-    COLUMN,
-    // eslint-disable-next-line no-unused-vars
-    AREA,
-    // eslint-disable-next-line no-unused-vars
-    ROW,
-    // eslint-disable-next-line no-unused-vars
-    PROPERTY,
-}
-
-interface IBaseNode {
-    id: number;
-    type: NodeType;
-    label: string;
-    children: Tree[];
-    parent?: Tree;
-}
-
-export interface ICardNode extends IBaseNode {
-    type: NodeType.CARD;
-    card: CardTemplate;
-    children: IColumnNode[];
-    parent: undefined;
-}
-
-export interface IColumnNode extends IBaseNode {
-    type: NodeType.COLUMN;
-    column: Column;
-    children: IAreaNode[];
-    parent: ICardNode;
-}
-
-export interface IAreaNode extends IBaseNode {
-    type: NodeType.AREA;
-    area: Area;
-    children: IRowNode[];
-    parent: IColumnNode;
-}
-
-export interface IRowNode extends IBaseNode {
-    type: NodeType.ROW;
-    row: Row;
-    children: IPropertyNode[];
-    parent: IAreaNode;
-}
-
-export interface IPropertyNode extends IBaseNode {
-    type: NodeType.PROPERTY;
-    property: Property;
-    children: [];
-    parent: IRowNode;
-}
-
-export type Tree =
-    | ICardNode
-    | IColumnNode
-    | IAreaNode
-    | IRowNode
-    | IPropertyNode;
+import { NodeType, type Tree } from '@/trpg/card_template/Tree';
 
 class Data {
     treeProps = {
@@ -179,21 +115,6 @@ export default defineComponent({
         editNode(data: Tree) {
             this.$emit('editNode', data);
         },
-    },
-    mounted() {
-        if (this.teStore.currentTree.length == 0) {
-            this.teStore.currentTree = [
-                {
-                    id: this.teStore.currentTreeNodeId,
-                    type: NodeType.CARD,
-                    label: '人物卡',
-                    card: new CardTemplate('', '', false, '', -1, '', ''),
-                    children: [],
-                    parent: undefined,
-                },
-            ];
-            this.teStore.currentTreeNodeId++;
-        }
     },
 });
 </script>

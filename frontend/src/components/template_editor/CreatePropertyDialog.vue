@@ -38,7 +38,7 @@ import {
     type Property,
 } from '@/trpg/card_template/Property';
 import { defineComponent } from 'vue';
-import { NodeType, type IRowNode } from './TemplateEditorAside.vue';
+import { NodeType, type IRowNode } from '@/trpg/card_template/Tree';
 
 class Data {
     visible = false;

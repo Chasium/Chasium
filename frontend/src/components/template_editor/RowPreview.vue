@@ -31,7 +31,7 @@
 import EvalScript from '@/trpg/script/EvalScript';
 import { defineComponent } from 'vue';
 import PropertyPreview from './PropertyPreview.vue';
-import type { IRowNode, Tree } from './TemplateEditorAside.vue';
+import type { IRowNode, Tree } from '@/trpg/card_template/Tree';
 
 export default defineComponent({
     props: {
