@@ -14,6 +14,11 @@
                     readonly
                     v-else-if="isStringProperty"
                 ></el-input>
+                <el-switch
+                    size="small"
+                    readonly
+                    v-else-if="isBoolProperty"
+                ></el-switch>
                 <el-select
                     size="small"
                     readonly
@@ -64,9 +69,11 @@ export default defineComponent({
         isStringProperty() {
             return this.propertyObj.type == PropertyType.STRING;
         },
+        isBoolProperty() {
+            return this.propertyObj.type == PropertyType.BOOL;
+        },
         isSelectProperty() {
-            const type = this.propertyObj.type;
-            return type == PropertyType.BOOL || type == PropertyType.SELECTION;
+            return this.propertyObj.type == PropertyType.SELECTION;
         },
         isCalculatedProperty() {
             const type = this.propertyObj.type;

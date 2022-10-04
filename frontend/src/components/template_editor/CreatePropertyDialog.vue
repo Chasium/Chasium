@@ -1,21 +1,23 @@
 <template>
-    <el-dialog draggable v-model="visible" title="创建属性">
-        <el-form>
-            <el-form-item label="属性类型">
-                <el-select v-model="nextPropertyType" placeholder="请选择">
-                    <el-option
-                        v-for="item in nextPropertyTypeOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
-            </el-form-item>
-            <el-row>
-                <el-button type="primary" @click="confirm">确定</el-button>
-                <el-button @click="cancel">取消</el-button>
-            </el-row>
-        </el-form>
+    <el-dialog draggable v-model="visible" width="30%" title="创建属性">
+        <template #default>
+            <el-form>
+                <el-form-item label="属性类型">
+                    <el-select v-model="nextPropertyType" placeholder="请选择">
+                        <el-option
+                            v-for="item in nextPropertyTypeOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+        </template>
+        <template #footer>
+            <el-button type="primary" @click="confirm">确定</el-button>
+            <el-button @click="cancel">取消</el-button>
+        </template>
     </el-dialog>
 </template>
 

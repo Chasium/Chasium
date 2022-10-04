@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AreaPreview: typeof import('./src/components/template_editor/AreaPreview.vue')['default']
+    CardEdit: typeof import('./src/components/template_editor/CardEdit.vue')['default']
     CardPreview: typeof import('./src/components/template_editor/CardPreview.vue')['default']
     ColumnPreview: typeof import('./src/components/template_editor/ColumnPreview.vue')['default']
     CreatePropertyDialog: typeof import('./src/components/template_editor/CreatePropertyDialog.vue')['default']
@@ -26,6 +27,7 @@ declare module '@vue/runtime-core' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTree: typeof import('element-plus/es')['ElTree']
     PropertyPreview: typeof import('./src/components/template_editor/PropertyPreview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
