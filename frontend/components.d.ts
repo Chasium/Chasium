@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     CardPreview: typeof import('./src/components/template_editor/CardPreview.vue')['default']
     ColumnPreview: typeof import('./src/components/template_editor/ColumnPreview.vue')['default']
     CreatePropertyDialog: typeof import('./src/components/template_editor/CreatePropertyDialog.vue')['default']
+    EditPropertyDialog: typeof import('./src/components/template_editor/EditPropertyDialog.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
