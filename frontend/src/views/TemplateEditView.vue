@@ -32,11 +32,7 @@ import { useTEStore } from '@/stores/templateEditor';
 import { defineComponent } from 'vue';
 import TemplateEditorAside, {
     NodeType,
-    type IAreaNode,
     type ICardNode,
-    type IColumnNode,
-    type IPropertyNode,
-    type IRowNode,
     type Tree,
 } from '../components/template_editor/TemplateEditorAside.vue';
 import CardPreview from '../components/template_editor/CardPreview.vue';
@@ -45,6 +41,7 @@ import { Column } from '@/trpg/card_template/Column';
 import type { Property } from '@/trpg/card_template/Property';
 import { Row } from '@/trpg/card_template/Row';
 import CreatePropertyDialog from '../components/template_editor/CreatePropertyDialog.vue';
+import { refHelper } from '@/utils/refHelper';
 
 class Data {
     currentTemplate: ICardNode = {
@@ -61,9 +58,11 @@ export default defineComponent({
             return useTEStore();
         },
         createPropertyDialog() {
-            return this.$refs[
-                'create-property-dialog'
-            ] as typeof CreatePropertyDialog;
+            return refHelper(
+                this,
+                'create-property-dialog',
+                CreatePropertyDialog
+            );
         },
     },
     components: { TemplateEditorAside, CardPreview, CreatePropertyDialog },
@@ -180,48 +179,6 @@ export default defineComponent({
         },
         editNode(data: Tree) {
             console.log(data);
-        },
-        buildTemplate() {
-            const tree = this.teStore.currentTree;
-            const cardNode = tree[0] as ICardNode;
-            const card = cardNode.card;
-            card.columns = [];
-            const cardChildren = cardNode.children;
-
-            for (const i of cardChildren) {
-                const columnNode = i as IColumnNode;
-                const column = columnNode.column;
-                column.areas = [];
-                const columnChildren = columnNode.children;
-
-                for (const j of columnChildren) {
-                    const areaNode = j as IAreaNode;
-                    const area = areaNode.area;
-                    area.rows = [];
-                    const areaChildren = areaNode.children;
-
-                    for (const k of areaChildren) {
-                        const rowNode = k as IRowNode;
-                        const row = rowNode.row;
-                        row.properties = [];
-                        const rowChildren = rowNode.children;
-
-                        for (const l of rowChildren) {
-                            const propertyNode = l as IPropertyNode;
-                            const property = propertyNode.property;
-                            row.properties.push(property);
-                        }
-
-                        area.rows.push(row);
-                    }
-
-                    column.areas.push(area);
-                }
-
-                card.columns.push(column);
-            }
-
-            this.teStore.currentTemplate = card;
         },
     },
 });

@@ -156,13 +156,12 @@ i {
     --el-button-hover-bg-color: #{$property-el-color};
     --el-input-border-color: #{$property-color};
     $lighter-property-color: rgba($property-color, 75%);
-    $lighter-property-hover: rgba($property-hover, 50%);
     --el-border-color: #{$lighter-property-color};
     --el-text-color-disabled: #{$lighter-property-color};
     --el-input-hover-border-color: #{$property-hover};
     --el-button-hover-border-color: #{$property-hover};
-    --el-button-hover-bg-color: #{$lighter-property-hover};
-    --el-button-bg-color: white;
+    --el-button-hover-bg-color: #{rgba($property-hover, 50%)};
+    --el-button-bg-color: #{rgba($property-hover, 25%)};
 }
 
 .button-property {

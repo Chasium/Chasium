@@ -6,7 +6,6 @@ export const useTEStore = defineStore('templateEditor', {
     state() {
         return {
             currentTree: [] as Tree[],
-            currentTemplate: new CardTemplate('', '', false, '', -1, '', ''),
             currentTreeNodeId: 1000,
             currentColumnId: 0,
             currentAreaId: 0,
