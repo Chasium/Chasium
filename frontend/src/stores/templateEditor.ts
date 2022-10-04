@@ -14,7 +14,4 @@ export const useTEStore = defineStore('templateEditor', {
             currentPropertyId: 0,
         };
     },
-    persist: {
-        enabled: true,
-    },
 });

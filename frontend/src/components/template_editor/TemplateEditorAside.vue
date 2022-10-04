@@ -47,60 +47,21 @@
             </template>
         </el-tree>
     </div>
-    <el-dialog
-        draggable="true"
-        v-model="createPropertyDialogVisible"
-        title="创建属性"
-    >
-        <el-form>
-            <el-form-item label="属性类型">
-                <el-select v-model="nextPropertyType" placeholder="请选择">
-                    <el-option
-                        v-for="item in nextPropertyTypeOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
-            </el-form-item>
-            <el-row>
-                <el-button type="primary" @click="confirmCreatePropertyDialog"
-                    >确定</el-button
-                >
-                <el-button @click="cancelCreatePropertyDialog">取消</el-button>
-            </el-row>
-        </el-form>
-    </el-dialog>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type Node from 'element-plus/es/components/tree/src/model/node';
 import { useTEStore } from '@/stores/templateEditor';
-import type CardTemplate from '@/trpg/card_template/CardTemplate';
-import { Column } from '@/trpg/card_template/Column';
-import { Area, AreaType } from '@/trpg/card_template/Area';
-import { Row } from '@/trpg/card_template/Row';
-import {
-    BoolProperty,
-    ButtonProperty,
-    ButtonPropertyPhase,
-    CalculatedBoolProperty,
-    CalculatedFloatProperty,
-    CalculatedIntProperty,
-    CalculatedStringProperty,
-    FloatProperty,
-    ImageProperty,
-    IntProperty,
-    PropertyType,
-    SelectionProperty,
-    StringProperty,
-    type Property,
-} from '@/trpg/card_template/Property';
+import CardTemplate from '@/trpg/card_template/CardTemplate';
+import type { Column } from '@/trpg/card_template/Column';
+import type { Area } from '@/trpg/card_template/Area';
+import type { Row } from '@/trpg/card_template/Row';
+import type { Property } from '@/trpg/card_template/Property';
 
 // eslint抽风？？为什么
 // eslint-disable-next-line no-unused-vars
-enum NodeType {
+export enum NodeType {
     // eslint-disable-next-line no-unused-vars
     CARD,
     // eslint-disable-next-line no-unused-vars
@@ -118,31 +79,42 @@ interface IBaseNode {
     type: NodeType;
     label: string;
     children: Tree[];
+    parent?: Tree;
 }
 
-interface ICardNode extends IBaseNode {
+export interface ICardNode extends IBaseNode {
     type: NodeType.CARD;
     card: CardTemplate;
+    children: IColumnNode[];
+    parent: undefined;
 }
 
-interface IColumnNode extends IBaseNode {
+export interface IColumnNode extends IBaseNode {
     type: NodeType.COLUMN;
     column: Column;
+    children: IAreaNode[];
+    parent: ICardNode;
 }
 
-interface IAreaNode extends IBaseNode {
+export interface IAreaNode extends IBaseNode {
     type: NodeType.AREA;
     area: Area;
+    children: IRowNode[];
+    parent: IColumnNode;
 }
 
-interface IRowNode extends IBaseNode {
+export interface IRowNode extends IBaseNode {
     type: NodeType.ROW;
     row: Row;
+    children: IPropertyNode[];
+    parent: IAreaNode;
 }
 
-interface IPropertyNode extends IBaseNode {
+export interface IPropertyNode extends IBaseNode {
     type: NodeType.PROPERTY;
     property: Property;
+    children: [];
+    parent: IRowNode;
 }
 
 export type Tree =
@@ -159,60 +131,22 @@ class Data {
         isLeaf: 'isLeaf',
     };
     nodeTypes = NodeType;
-    createPropertyDialogVisible = false;
-    nextPropertyType = PropertyType.INT;
-    nextPropertyTypeOptions = [
-        {
-            value: PropertyType.INT,
-            label: '玩家输入整数',
-        },
-        {
-            value: PropertyType.FLOAT,
-            label: '玩家输入浮点数',
-        },
-        {
-            value: PropertyType.BOOL,
-            label: '玩家输入布尔值',
-        },
-        {
-            value: PropertyType.STRING,
-            label: '玩家输入字符串',
-        },
-        {
-            value: PropertyType.SELECTION,
-            label: '选项字符串',
-        },
-        {
-            value: PropertyType.CALCULATED_INT,
-            label: '计算整数',
-        },
-        {
-            value: PropertyType.CALCULATED_FLOAT,
-            label: '计算浮点数',
-        },
-        {
-            value: PropertyType.CALCULATED_BOOL,
-            label: '计算布尔值',
-        },
-        {
-            value: PropertyType.CALCULATED_STRING,
-            label: '计算字符串',
-        },
-        {
-            value: PropertyType.IMAGE,
-            label: '图片',
-        },
-        {
-            value: PropertyType.BUTTON,
-            label: '按钮',
-        },
-    ];
-    currentCreatingProperty?: IRowNode = undefined;
 }
 
 export default defineComponent({
     data() {
         return new Data();
+    },
+    emits: {
+        appendNode(__data: Tree) {
+            return true;
+        },
+        removeNode(__data: Tree) {
+            return true;
+        },
+        editNode(__data: Tree) {
+            return true;
+        },
     },
     computed: {
         teStore() {
@@ -237,204 +171,13 @@ export default defineComponent({
     },
     methods: {
         appendNode(data: Tree) {
-            console.log(data);
-            if (data.type == NodeType.CARD) {
-                const column = new Column(
-                    this.teStore.currentColumnId,
-                    false,
-                    ''
-                );
-                this.teStore.currentColumnId++;
-                data.card.columns.push(column);
-                data.children.push({
-                    type: NodeType.COLUMN,
-                    id: this.teStore.currentTreeNodeId,
-                    label: `列${column.id}`,
-                    column: column,
-                    children: [],
-                });
-                this.teStore.currentTreeNodeId++;
-            } else if (data.type == NodeType.COLUMN) {
-                const area = new Area(
-                    this.teStore.currentAreaId,
-                    '',
-                    AreaType.PERMANENT,
-                    false,
-                    '',
-                    false
-                );
-                this.teStore.currentAreaId++;
-                data.column.areas.push(area);
-                data.children.push({
-                    type: NodeType.AREA,
-                    id: this.teStore.currentTreeNodeId,
-                    label: `区域${area.id}`,
-                    area: area,
-                    children: [],
-                });
-                this.teStore.currentTreeNodeId++;
-            } else if (data.type == NodeType.AREA) {
-                const row = new Row(this.teStore.currentRowId, '', false, '');
-                this.teStore.currentRowId++;
-                data.area.rows.push(row);
-                data.children.push({
-                    type: NodeType.ROW,
-                    id: this.teStore.currentTreeNodeId,
-                    label: `行${row.id}`,
-                    row: row,
-                    children: [],
-                });
-                this.teStore.currentTreeNodeId++;
-            } else if (data.type == NodeType.ROW) {
-                this.currentCreatingProperty = data;
-                this.createPropertyDialogVisible = true;
-            }
+            this.$emit('appendNode', data);
         },
-        removeNode(node: Node, data: Tree) {
-            const parent = node.parent;
-            const parentData = parent.data as Tree;
-            if (
-                parentData.type == NodeType.CARD &&
-                data.type == NodeType.COLUMN
-            ) {
-                const children: Column[] = parentData.card.columns;
-                const index = children.findIndex(
-                    (d) => d.id === data.column.id
-                );
-                children.splice(index, 1);
-            } else if (
-                parentData.type == NodeType.COLUMN &&
-                data.type == NodeType.AREA
-            ) {
-                const children: Area[] = parentData.column.areas;
-                const index = children.findIndex((d) => d.id === data.area.id);
-                children.splice(index, 1);
-            } else if (
-                parentData.type == NodeType.AREA &&
-                data.type == NodeType.ROW
-            ) {
-                const children: Row[] = parentData.area.rows;
-                const index = children.findIndex((d) => d.id === data.row.id);
-                children.splice(index, 1);
-            } else if (
-                parentData.type == NodeType.ROW &&
-                data.type == NodeType.PROPERTY
-            ) {
-                const children: Property[] = parentData.row.properties;
-                const index = children.findIndex(
-                    (d) => d.id === data.property.id
-                );
-                children.splice(index, 1);
-            }
-            const children: Tree[] = parentData.children;
-            const index = children.findIndex((d) => d.id === data.id);
-            children.splice(index, 1);
+        removeNode(__node: Node, data: Tree) {
+            this.$emit('removeNode', data);
         },
         editNode(data: Tree) {
-            console.log(data);
-        },
-        confirmCreatePropertyDialog() {
-            let property: Property = undefined as unknown as Property;
-            if (this.nextPropertyType == PropertyType.INT) {
-                property = new IntProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.FLOAT) {
-                property = new FloatProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.BOOL) {
-                property = new BoolProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.STRING) {
-                property = new StringProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.CALCULATED_INT) {
-                property = new CalculatedIntProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.CALCULATED_FLOAT) {
-                property = new CalculatedFloatProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    '',
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.CALCULATED_BOOL) {
-                property = new CalculatedBoolProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    '',
-                    false,
-                    ''
-                );
-            } else if (
-                this.nextPropertyType == PropertyType.CALCULATED_STRING
-            ) {
-                property = new CalculatedStringProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.SELECTION) {
-                property = new SelectionProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    '',
-                    false,
-                    ''
-                );
-            } else if (this.nextPropertyType == PropertyType.IMAGE) {
-                property = new ImageProperty(
-                    this.teStore.currentPropertyId,
-                    ''
-                );
-            } else {
-                property = new ButtonProperty(
-                    this.teStore.currentPropertyId,
-                    '',
-                    ButtonPropertyPhase.ANY,
-                    '',
-                    ''
-                );
-            }
-            this.teStore.currentPropertyId++;
-            this.currentCreatingProperty?.row.properties.push(property);
-            this.currentCreatingProperty?.children.push({
-                type: NodeType.PROPERTY,
-                id: this.teStore.currentTreeNodeId,
-                label: `属性${property.id}`,
-                property: property,
-                children: [],
-            });
-            this.teStore.currentTreeNodeId++;
-            this.createPropertyDialogVisible = false;
-        },
-        cancelCreatePropertyDialog() {
-            this.createPropertyDialogVisible = false;
+            this.$emit('editNode', data);
         },
     },
     mounted() {
@@ -444,8 +187,9 @@ export default defineComponent({
                     id: this.teStore.currentTreeNodeId,
                     type: NodeType.CARD,
                     label: '人物卡',
-                    card: this.teStore.currentTemplate,
+                    card: new CardTemplate('', '', false, '', -1, '', ''),
                     children: [],
+                    parent: undefined,
                 },
             ];
             this.teStore.currentTreeNodeId++;
@@ -454,6 +198,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+@use '@/assets/css/card-colors.scss' as *;
+
 .aside-main {
     width: 100%;
     height: 100%;
@@ -481,6 +227,18 @@ export default defineComponent({
 .tree-node {
     i {
         margin-right: 0.25em;
+        &.fa-columns {
+            color: $column-color;
+        }
+        &.fa-file-alt {
+            color: $area-color;
+        }
+        &.fa-bars {
+            color: $row-color;
+        }
+        &.fa-table {
+            color: $property-color;
+        }
     }
     span {
         margin-right: 0.5em;

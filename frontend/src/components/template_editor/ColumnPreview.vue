@@ -1,20 +1,20 @@
 <template>
-    <div class="area-frame">
+    <div class="column-frame">
         <div class="title-row">
             <i class="fas fa-cog" @click="editNode(nodeObj)"></i>
-            <div class="area-title">{{ name }}</div>
+            <div class="column-title">{{ name }}</div>
             <i class="fas fa-trash-alt" @click="removeNode(nodeObj)"></i>
         </div>
         <div class="main-row">
-            <div class="row-container" v-for="item in nodeObj.children">
-                <RowPreview
-                    :row="item"
+            <div class="area-container" v-for="item in nodeObj.children">
+                <AreaPreview
+                    :area="item"
                     v-on:append-node="appendNode"
                     v-on:edit-node="editNode"
                     v-on:remove-node="removeNode"
                 />
             </div>
-            <div class="row-container add-row" @click="appendNode(nodeObj)">
+            <div class="add-area area-container" @click="appendNode(nodeObj)">
                 <i class="fas fa-plus"></i>
             </div>
         </div>
@@ -24,23 +24,23 @@
 <script lang="ts">
 import EvalScript from '@/trpg/script/EvalScript';
 import { defineComponent } from 'vue';
-import RowPreview from './RowPreview.vue';
-import type { IAreaNode, Tree } from './TemplateEditorAside.vue';
+import AreaPreview from './AreaPreview.vue';
+import type { IColumnNode, Tree } from './TemplateEditorAside.vue';
 
 export default defineComponent({
     props: {
-        area: { type: Object, required: true },
+        column: { type: Object, required: true },
     },
     computed: {
         nodeObj() {
-            return this.area as IAreaNode;
+            return this.column as IColumnNode;
         },
-        areaObj() {
-            return this.nodeObj.area;
+        columnObj() {
+            return this.nodeObj.column;
         },
         name() {
             try {
-                return new EvalScript(this.areaObj.nameScript).run();
+                return new EvalScript(this.columnObj.nameScript).run();
             } catch (e) {
                 return '';
             }
@@ -68,32 +68,33 @@ export default defineComponent({
             this.$emit('editNode', data);
         },
     },
-    components: { RowPreview },
+    components: { AreaPreview },
 });
 </script>
 
 <style lang="scss" scoped>
 @use '@/assets/css/card-colors.scss' as *;
 
-.area-frame {
-    border-radius: 8px;
-    border: 1px solid $area-color;
+.column-frame {
+    border-radius: 10px;
+    border: 1px solid $column-color;
+    min-width: 10em;
 }
 
-.area-title {
+.column-title {
     min-width: 2em;
     min-height: 1.2em;
     line-height: 1.2em;
-    margin-left: 4px;
-    margin-right: 4px;
-    border: 1px solid $area-hover;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: 1px solid $column-hover;
     border-radius: 2px;
 }
 
 i {
-    color: $area-color;
+    color: $column-color;
     &:hover {
-        color: $area-hover;
+        color: $column-hover;
     }
 }
 
@@ -106,25 +107,28 @@ i {
     margin-bottom: 2px;
     justify-content: space-between;
 }
+
 .main-row {
     display: inline;
 }
 
-.row-container {
-    margin: 4px;
+.area-container {
+    margin: 5px;
 }
 
-.add-row {
+.add-area {
+    height: 5em;
     text-align: center;
-    border: 2px dashed $row-color;
-    border-radius: 8px;
+    line-height: 5em;
+    border: 2px dashed $area-color;
+    border-radius: 10px;
     i {
-        color: $row-color;
+        color: $area-color;
     }
     &:hover {
-        border-color: $row-hover;
+        border-color: $area-hover;
         i {
-            color: $row-hover;
+            color: $area-hover;
         }
     }
 }
