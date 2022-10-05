@@ -36,6 +36,10 @@ class TsModel:
         """
         生成的Typescript文件的内容
         """
+        # TODO: 使用f-string代替字符串加法来构造代码，提高可读性
+        # TODO: 使用isinstance代替type字符串，提高可读性和效率
+        # TODO: 使用多行字符串代替字符串内的\n，提高可读性
+        # TODO: 使用四个空格代替\t
         tsContent = ""
 
         main_class = self.__apiData.main_class

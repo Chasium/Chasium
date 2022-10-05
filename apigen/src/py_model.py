@@ -1,7 +1,7 @@
 """
 用于生成Python代码
 """
-from src.models import APIData
+from src.models import APIData, ListField, ObjectField
 
 
 class PyModel:
@@ -23,6 +23,10 @@ class PyModel:
         """
         生成的Python文件的内容
         """
+        # TODO: 使用f-string代替字符串加法来构造代码，提高可读性
+        # TODO: 使用isinstance代替type字符串，提高可读性和效率
+        # TODO: 使用多行字符串代替字符串内的\n，提高可读性
+        # TODO: 使用四个空格代替\t
         pythonContent = "from flask import Request\n\n\n"
         classes = self.__apiData.classes
 
@@ -58,7 +62,15 @@ class PyModel:
                 # type(fields[key2]))形如 <class src.models.BoolField>
             pythonContent += "\tdef __init__(self, request: Request):\n"
             for key2 in fields:
-                pythonContent += ("\t\tself." + key2 +
-                                  " = request.json[\"" + key2 + "\"]\n")
+                if isinstance(fields[key2], ObjectField):
+                    obj_field: ObjectField = fields[key2]
+                    # 以下是一个使用f-string的示例
+                    pythonContent += f'\t\tself.{key2} = {obj_field.obj_class.class_name}(request.json["{key2}"])\n'
+                elif isinstance(fields[key2], ListField):
+                    # TODO: 完成对数组类型的初始化（注意递归多层数组）
+                    pass
+                else:
+                    pythonContent += ("\t\tself." + key2 +
+                                      " = request.json[\"" + key2 + "\"]\n")
             pythonContent += "\n"
         return pythonContent
