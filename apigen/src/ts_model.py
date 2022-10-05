@@ -36,6 +36,10 @@ class TsModel:
         """
         生成的Typescript文件的内容
         """
+        # TODO: 使用f-string代替字符串加法来构造代码，提高可读性
+        # TODO: 使用isinstance代替type字符串，提高可读性和效率
+        # TODO: 使用多行字符串代替字符串内的\n，提高可读性
+        # TODO: 使用四个空格代替\t
         tsContent = ""
 
         main_class = self.__apiData.main_class
@@ -66,37 +70,3 @@ class TsModel:
                 tsContent += (fieldType + ";\n")
             tsContent += "}\n"
         return tsContent
-        # TODO: 返回由构造函数中给出的APIData生成的Typescript文件的全部内容
-        # APIData中，classes里的每个类对应一个interface
-        # 举例：以下xml文档
-        #
-        # <classes>
-        #     <class class-name="A">
-        #         <description>xxx</description>
-        #         <int>
-        #             <key>a</key>
-        #             <description>yyy</description>
-        #         </int>
-        #         ...
-        #     </class>
-        #     <class class-name="B">...</class>
-        # </classes>
-        #
-        # 对应的APIData应该被转化为如下Typescript代码：
-        #
-        # /**
-        #  * xxx
-        #  */
-        # interface A {
-        #     /**
-        #      * yyy
-        #      */
-        #     a: number;
-        #     ...
-        # }
-        #
-        # interface B {
-        #     ...
-        # }
-        #
-        # 另外，main_class需要根据以上规则转化为export default interface
