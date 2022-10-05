@@ -66,37 +66,3 @@ class TsModel:
                 tsContent += (fieldType + ";\n")
             tsContent += "}\n"
         return tsContent
-        # TODO: 返回由构造函数中给出的APIData生成的Typescript文件的全部内容
-        # APIData中，classes里的每个类对应一个interface
-        # 举例：以下xml文档
-        #
-        # <classes>
-        #     <class class-name="A">
-        #         <description>xxx</description>
-        #         <int>
-        #             <key>a</key>
-        #             <description>yyy</description>
-        #         </int>
-        #         ...
-        #     </class>
-        #     <class class-name="B">...</class>
-        # </classes>
-        #
-        # 对应的APIData应该被转化为如下Typescript代码：
-        #
-        # /**
-        #  * xxx
-        #  */
-        # interface A {
-        #     /**
-        #      * yyy
-        #      */
-        #     a: number;
-        #     ...
-        # }
-        #
-        # interface B {
-        #     ...
-        # }
-        #
-        # 另外，main_class需要根据以上规则转化为export default interface
