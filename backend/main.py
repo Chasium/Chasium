@@ -4,8 +4,9 @@
 from http_api import http_api
 from ws_api import ws_api
 from db import db
+import config
 
-
+http_api.config.from_object(config)
 db.init_app(http_api)
 
 if __name__ == '__main__':
