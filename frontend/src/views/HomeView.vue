@@ -81,17 +81,20 @@ export default defineComponent({
                 });
                 this.showUserWrong = false;
                 this.showPassWrong = false;
-                if (response.data.code === 0 || response.data.code === 3) {
+                if (
+                    response.data['code'] === 0 ||
+                    response.data['code'] === 3
+                ) {
                     alert('登录成功');
                     //TODO：跳转到主页面
                     this.userStore.userName = this.form.userName;
-                    this.userStore.session = response.data.session;
+                    this.userStore.session = response.data['session'];
                     this.userStore.loggedIn = true;
-                } else if (response.data.code === 1) {
+                } else if (response.data['code'] === 1) {
                     this.showUserWrong = true;
                     this.userStore.loggedIn = false;
                     alert('用户名不存在');
-                } else if (response.data.code === 2) {
+                } else if (response.data['code'] === 2) {
                     this.showPassWrong = true;
                     this.userStore.loggedIn = false;
                     alert('密码错误');

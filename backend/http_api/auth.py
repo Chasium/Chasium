@@ -8,12 +8,12 @@ from flask import (
 from db import db
 from db.models.user import UserData
 
-from generated.login import LoginRequest, LoginResponse
-from generated.register import RegisterRequest, RegisterResponse
+from generated.login.LoginRequest import LoginRequest
+from generated.register.RegisterRequest import RegisterRequest
 # from werkzeug.security import check_password_hash, generate_password_hash
 
 login_user = {}
-auth_bp = Blueprint('auth', __name__, url_prefix='')
+auth_bp = Blueprint('auth', __name__, url_prefix='/user')
 
 # function for testing
 # @auth_bp.route("/<user>")
@@ -25,8 +25,8 @@ auth_bp = Blueprint('auth', __name__, url_prefix='')
 
 @auth_bp.route("/login", methods=['GET', 'POST'])
 def login():
-    responseData = LoginResponse(request)
-    responseData.code = 404
+    responseData = {}
+    responseData['code'] = 404
 
     if request.method == 'POST':
         requestData = LoginRequest(request)
@@ -40,29 +40,28 @@ def login():
         # verifications
         if not userIsExisted(username):
             error = 'user not found'
-            responseData.code = 1
+            responseData['code'] = 1
         elif not passwordVerified(username, password):
             error = 'wrong password'
-            responseData.code = 2
+            responseData['code'] = 2
         elif userIsLogged(username):
             error = 'login already'
-            responseData.code = 3
-            
+            responseData['code'] = 3
 
         if error is None:
             # verified, login user
             print('Verified')
             temp_session = loginUser(username)
-            responseData.code = 0
-            responseData.session = temp_session
+            responseData['code'] = 0
+            responseData['session'] = temp_session
 
             # return redirect(url_for('auth.userGreet', user=username))
         else:
             print(error)
-            responseData.session = None
+            responseData['session'] = None
 
     return responseData
-    
+
     # return '''
     #     <form method="post">
     #         <h2>Login</h2>
@@ -75,44 +74,40 @@ def login():
 
 @auth_bp.route("/register", methods=['GET', 'POST'])
 def register():
-    responseData = RegisterResponse(request)
-    responseData.code = 404
+    responseData = {}
+    responseData['code'] = 404
 
     if request.method == 'POST':
 
         requestData = RegisterRequest(request)
         username = requestData.userName
         password = requestData.password
-        comfirm_password = requestData.confirmPassword
         print('User, ', username, password)
         error = None
 
         # verifications
-        if password != comfirm_password:
-            error = 'password unmatched'
-            responseData.code = 21
         if not UsernameIsLegal(username):
             error = 'invaild username'
-            responseData.code = 10
+            responseData['code'] = 10
         elif not PasswordIsLegal(password):
             error = 'invaild password'
-            responseData.code = 20
+            responseData['code'] = 20
 
         elif userIsExisted(username):
             error = 'user existed'
-            responseData.code = 11
+            responseData['code'] = 11
 
         if error is None:
             # verified, register user
             addUser(username, password)
             temp_session = loginUser(username)
-            responseData.code = 0
-            responseData.session = temp_session
+            responseData['code'] = 0
+            responseData['session'] = temp_session
 
             # return redirect(url_for('auth.userGreet', user=username))
         else:
             print(error)
-            responseData.session = None
+            responseData['session'] = None
 
     return responseData
     # return '''
@@ -156,6 +151,7 @@ def addUser(username, password):
     db.session.commit()
     print('New user created')
     return
+
 
 def getGeneratedSession(username):
     ss = login_user.get(username)

@@ -108,17 +108,17 @@ export default defineComponent({
                 this.showUserWrong = false;
                 this.showReUser = false;
                 this.showPassWrong = false;
-                if (response.data.code === 0) {
+                if (response.data['code'] === 0) {
                     alert('注册成功');
                     this.userStore.userName = this.form.userName;
                     // TODO:跳转到登录页面
-                } else if (response.data.code === 10) {
+                } else if (response.data['code'] === 10) {
                     this.showUserWrong = true;
                     alert('用户名不合法');
-                } else if (response.data.code === 11) {
+                } else if (response.data['code'] === 11) {
                     this.showReUser = true;
                     alert('用户已存在');
-                } else if (response.data.code === 20) {
+                } else if (response.data['code'] === 20) {
                     this.showPassWrong = true;
                     alert('密码不合法');
                 } else {
