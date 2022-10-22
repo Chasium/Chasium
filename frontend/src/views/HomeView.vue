@@ -19,11 +19,10 @@
                         placeholder="密码"
                     />
                 </el-form-item>
-                <div class="reminder" v-show="showReminder">
-                    您输入的密码错误,请重新输入
-                </div>
                 <div class="reminder" v-show="showUser">用户名不能为空</div>
                 <div class="reminder" v-show="showPass">密码不能为空</div>
+                <div class="reminder" v-show="showUserWrong">用户名不存在</div>
+                <div class="reminder" v-show="showPassWrong">密码错误</div>
                 <div class="login user-data">
                     <div class="container">
                         <a class="button is-dark" @click="login"> 登录 </a>
@@ -42,13 +41,15 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import type LoginResponse from '@/generated/login/LoginResponse';
 import { useUserStore } from '@/stores/user';
+import { stringLiteral } from '@babel/types';
 
 export default defineComponent({
     data() {
         return {
-            showReminder: false,
             showUser: false,
             showPass: false,
+            showUserWrong: false,
+            showPassWrong: false,
             form: {
                 userName: '', //用户名
                 password: '', //用户密码
@@ -63,8 +64,7 @@ export default defineComponent({
     methods: {
         async login() {
             this.showPass = false;
-            this.showReminder = false;
-            this.showPass = false;
+            this.showUser = false;
             if (this.form.userName == '') {
                 this.showUser = true;
                 return;
@@ -79,14 +79,23 @@ export default defineComponent({
                     userName: this.form.userName,
                     password: this.form.password,
                 });
-
-                if (response.data.code === 0) {
+                this.showUserWrong = false;
+                this.showPassWrong = false;
+                if (response.data.code === 0 || response.data.code === 3) {
+                    alert('登录成功');
+                    //TODO：跳转到主页面
                     this.userStore.userName = this.form.userName;
                     this.userStore.session = response.data.session;
                     this.userStore.loggedIn = true;
-                }
-                //TODO: 根据后端接口设置else内容
-                else {
+                } else if (response.data.code === 1) {
+                    this.showUserWrong = true;
+                    this.userStore.loggedIn = false;
+                    alert('用户名不存在');
+                } else if (response.data.code === 2) {
+                    this.showPassWrong = true;
+                    this.userStore.loggedIn = false;
+                    alert('密码错误');
+                } else {
                     alert('未知错误');
                 }
             } catch (err) {
