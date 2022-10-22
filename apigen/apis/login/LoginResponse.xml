@@ -7,7 +7,7 @@
             <description>登录响应</description>
             <int>
                 <key>code</key>
-                <description>响应代码</description>
+                <description>响应代码: 0 - login successfully, 1 - user not found, 2 - wrong password, 3 - login already, 404 - error</description>
             </int>
             <string>
                 <key>session</key>

@@ -7,7 +7,7 @@
             <description>注册响应</description>
             <int>
                 <key>code</key>
-                <description>响应代码</description>
+                <description>响应代码: 0 - register successfully, 10 - invaild username, 11 - user existed, 20 - invaild password, 21 - password unmatched, 404 - error</description>
             </int>
             <string>
                 <key>session</key>

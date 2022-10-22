@@ -1,120 +1,128 @@
 import functools
 from glob import escape
+from random import getrandbits
+from multiprocessing.spawn import import_main_path
 from flask import (
     Blueprint, flash, g, redirect, request, session, url_for
 )
 from db import db
 from db.models.user import UserData
+
+from generated.login import LoginRequest, LoginResponse
+from generated.register import RegisterRequest, RegisterResponse
 # from werkzeug.security import check_password_hash, generate_password_hash
 
-
+login_user = {}
 auth_bp = Blueprint('auth', __name__, url_prefix='')
 
-
-@auth_bp.route("/<user>")
-def userGreet(user):
-    return f'''
-        <p>Hello, {escape(user)}!</p>
-    '''
+# function for testing
+# @auth_bp.route("/<user>")
+# def userGreet(user):
+#     return f'''
+#         <p>Hello, {escape(user)}!</p>
+#     '''
 
 
 @auth_bp.route("/login", methods=['GET', 'POST'])
 def login():
+    responseData = LoginResponse(request)
+    responseData.code = 404
+
     if request.method == 'POST':
-        submitAction = request.form.get('submit_button')
-        if submitAction == 'login':
+        requestData = LoginRequest(request)
 
-            global current_user_data
-            # data = request.get_json(silent=True)
-            # username = data['username']
-            # password = data['password']
+        # use api gen get object of request
+        username = requestData.userName
+        password = requestData.password
+        print('User, ', username, password)
 
-            username = request.form['username']
-            password = request.form['password']
-            print('User, ', username, password)
+        error = None
+        # verifications
+        if not userIsExisted(username):
+            error = 'user not found'
+            responseData.code = 1
+        elif not passwordVerified(username, password):
+            error = 'wrong password'
+            responseData.code = 2
+        elif userIsLogged(username):
+            error = 'login already'
+            responseData.code = 3
+            
 
-            error = None
-            # verifications
-            if not UsernameIsLegal(username):
-                error = 'illegal username'
-            elif not PasswordIsLegal(password):
-                error = 'illegal password'
+        if error is None:
+            # verified, login user
+            print('Verified')
+            temp_session = loginUser(username)
+            responseData.code = 0
+            responseData.session = temp_session
 
-            elif not userIsExisted(username):
-                error = 'wrong username or password'
-            elif not passwordVerified(username, password):
-                error = 'wrong username or password'
-            elif userIsLogged(username):
-                error = 'logged in already'
-
-            if error is None:
-                # verified, login user
-                print('Verified')
-                loginUser(username)
-                current_user_data = {
-                    'username': username, 'password': password}
-                # return 'login successfully'
-
-                return redirect(url_for('auth.userGreet', user=username))
-            else:
-                print(error)
-                # return error
+            # return redirect(url_for('auth.userGreet', user=username))
         else:
-            print('fk up')
+            print(error)
+            responseData.session = None
 
-    return '''
-        <form method="post">
-            <h2>Login</h2>
-            <p>User Name: <input type=text name=username></p>
-            <p>Password: <input type=password name=password></p>
-            <p><input type=submit name=submit_button value=login></p>
-        <form>
-    '''
+    return responseData
+    
+    # return '''
+    #     <form method="post">
+    #         <h2>Login</h2>
+    #         <p>User Name: <input type=text name=username></p>
+    #         <p>Password: <input type=password name=password></p>
+    #         <p><input type=submit name=submit_button value=login></p>
+    #     <form>
+    # '''
 
 
 @auth_bp.route("/register", methods=['GET', 'POST'])
 def register():
+    responseData = RegisterResponse(request)
+    responseData.code = 404
+
     if request.method == 'POST':
-        submitAction = request.form.get('submit_button')
-        if submitAction == 'register':
 
-            # data = request.get_json(silent=True)
-            # username = data['username']
-            # password = data['password']
+        requestData = RegisterRequest(request)
+        username = requestData.userName
+        password = requestData.password
+        comfirm_password = requestData.confirmPassword
+        print('User, ', username, password)
+        error = None
 
-            username = request.form['username']
-            password = request.form['password']
-            print('User, ', username, password)
-            error = None
+        # verifications
+        if password != comfirm_password:
+            error = 'password unmatched'
+            responseData.code = 21
+        if not UsernameIsLegal(username):
+            error = 'invaild username'
+            responseData.code = 10
+        elif not PasswordIsLegal(password):
+            error = 'invaild password'
+            responseData.code = 20
 
-            # verifications
-            if not UsernameIsLegal(username):
-                error = 'illegal username'
-            elif not PasswordIsLegal(password):
-                error = 'illegal password'
+        elif userIsExisted(username):
+            error = 'user existed'
+            responseData.code = 11
 
-            elif userIsExisted(username):
-                error = 'user existed'
+        if error is None:
+            # verified, register user
+            addUser(username, password)
+            temp_session = loginUser(username)
+            responseData.code = 0
+            responseData.session = temp_session
 
-            if error is None:
-                # verified, register user
-                addUser(username, password)
-                loginUser(username)
-                # return 'register successfully'
+            # return redirect(url_for('auth.userGreet', user=username))
+        else:
+            print(error)
+            responseData.session = None
 
-                return redirect(url_for('auth.userGreet', user=username))
-            else:
-                print(error)
-                # return error
-
-    return '''
-        <form method="post">
-            <h2>Register</h2>
-            <p>User Name: <input type=text name=username></p>
-            <p>Password: <input type=password name=password></p>
-            <p><input type=submit name=submit_button value=register></p>
-        <form>
-    '''
+    return responseData
+    # return '''
+    #     <form method="post">
+    #         <h2>Register</h2>
+    #         <p>User Name: <input type=text name=username></p>
+    #         <p>Password: <input type=password name=password></p>
+    #         <p><input type=submit name=submit_button value=register></p>
+    #     <form>
+    # '''
 
 
 # Verifications
@@ -149,6 +157,12 @@ def addUser(username, password):
     print('New user created')
     return
 
+def getGeneratedSession(username):
+    ss = login_user.get(username)
+    if ss is None:
+        return hex(getrandbits(128))
+    return ss
+
 
 # log in and out methods modifying session
 
@@ -157,11 +171,14 @@ def loginUser(username):
     if current_user:
         session['username'] = current_user.name
         session['userid'] = current_user.id
+        temp_session = getGeneratedSession(username)
+        login_user[username] = temp_session
         print('user', username, 'login!')
     else:
         # raise error: undefined user
-        pass
-    return
+        print('undefined user')
+        temp_session = None
+    return temp_session
 
 
 def userIsLogged(username):
