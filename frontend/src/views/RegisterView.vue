@@ -112,6 +112,7 @@ export default defineComponent({
                     alert('注册成功');
                     this.userStore.userName = this.form.userName;
                     // TODO:跳转到登录页面
+                    this.$router.push('/');
                 } else if (response.data.code === 10) {
                     this.showUserWrong = true;
                     alert('用户名不合法');
