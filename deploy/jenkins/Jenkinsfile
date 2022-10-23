@@ -24,6 +24,9 @@ pipeline {
                     sh 'tar -xf node-v16.13.0-linux-x64.tar.xz -C /usr --strip-components 1'
                 }
                 sh 'node -v'
+
+                sh 'sudo apt-get install python3'
+                sh 'python3 -v'
             }
         }
     }
