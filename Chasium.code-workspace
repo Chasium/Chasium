@@ -19,6 +19,10 @@
     {
       "path": "docs",
       "name": "文档"
+    },
+    {
+      "path": "deploy",
+      "name": " 部署文件"
     }
   ],
   "settings": {
