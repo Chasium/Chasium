@@ -3,7 +3,7 @@
 """
 from http_api import http_api
 import config
-from db import db
+from db import db, models
 
 
 http_api.config.from_object(config)
