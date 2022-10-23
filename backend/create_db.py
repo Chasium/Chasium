@@ -11,4 +11,5 @@ db.init_app(http_api)
 http_api.app_context().push()
 
 with http_api.app_context():
+    db.drop_all()
     db.create_all()

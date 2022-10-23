@@ -29,5 +29,12 @@ pipeline {
                 sh 'python3 --version'
             }
         }
+        stage('运行apigen') {
+            steps {
+                dir('./apigen') {
+                    sh 'python3 ./main.py'
+                }
+            }
+        }
     }
 }
