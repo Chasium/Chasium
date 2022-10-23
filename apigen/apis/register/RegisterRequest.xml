@@ -1,10 +1,10 @@
 <!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
 <api-data>
-    <api-path>/auth/login</api-path>
+    <api-path>/user/register</api-path>
     <http-request />
     <main-class>
-        <class class-name="LoginRequest">
-            <description>登录请求</description>
+        <class class-name="RegisterRequest">
+            <description>注册请求</description>
             <string>
                 <key>userName</key>
                 <description>用户名</description>

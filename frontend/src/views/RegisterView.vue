@@ -27,6 +27,8 @@
                 </div>
                 <div class="reminder" v-show="showUser">用户名不能为空</div>
                 <div class="reminder" v-show="showPass">密码不能为空</div>
+                <div class="reminder" v-show="showUserWrong">用户名不合法</div>
+                <div class="reminder" v-show="showPassWrong">密码不合法</div>
                 <div class="reminder" v-show="showConfirmPass">请确认密码</div>
                 <div class="reminder" v-show="showPassNotMatch">
                     两次输入密码不一致
@@ -48,6 +50,8 @@
 import { throwStatement } from '@babel/types';
 import { parseStringStyle } from '@vue/shared';
 import axios from 'axios';
+import type RegisterResponse from '@/generated/register/RegisterResponse';
+import { useUserStore } from '@/stores/user';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -58,12 +62,19 @@ export default defineComponent({
             showPass: false,
             showConfirmPass: false,
             showPassNotMatch: false,
+            showUserWrong: false,
+            showPassWrong: false,
             form: {
                 userName: '', //用户名
                 password: '', //用户密码
                 confirmPassword: '', //确认密码
             },
         };
+    },
+    computed: {
+        userStore() {
+            return useUserStore();
+        },
     },
     methods: {
         async createUser() {
@@ -77,7 +88,6 @@ export default defineComponent({
                 return;
             } else if (this.form.password == '') {
                 this.showPass = true;
-                this.showUser = false;
                 return;
             } else if (this.form.confirmPassword == '') {
                 this.showConfirmPass = true;
@@ -88,8 +98,32 @@ export default defineComponent({
             }
             console.log(this.form.userName);
             try {
-                console.log('');
-                // TODO: 注册设置response
+                let response = await axios.post<RegisterResponse>(
+                    '/user/register',
+                    {
+                        userName: this.form.userName,
+                        password: this.form.password,
+                    }
+                );
+                this.showUserWrong = false;
+                this.showReUser = false;
+                this.showPassWrong = false;
+                if (response.data['code'] === 0) {
+                    alert('注册成功');
+                    this.userStore.userName = this.form.userName;
+                    // TODO:跳转到登录页面
+                } else if (response.data['code'] === 10) {
+                    this.showUserWrong = true;
+                    alert('用户名不合法');
+                } else if (response.data['code'] === 11) {
+                    this.showReUser = true;
+                    alert('用户已存在');
+                } else if (response.data['code'] === 20) {
+                    this.showPassWrong = true;
+                    alert('密码不合法');
+                } else {
+                    alert('未知错误');
+                }
             } catch (err) {
                 alert('异常');
             }

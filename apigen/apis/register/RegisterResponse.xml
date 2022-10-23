@@ -1,13 +1,13 @@
 <!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
 <api-data>
-    <api-path>/user/login</api-path>
+    <api-path>/user/register</api-path>
     <http-request />
     <main-class>
-        <class class-name="LoginResponse">
-            <description>登录响应</description>
+        <class class-name="RegisterResponse">
+            <description>注册响应</description>
             <int>
                 <key>code</key>
-                <description>响应代码: 0 - login successfully, 1 - user not found, 2 - wrong password, 3 - login already, 404 - error</description>
+                <description>响应代码: 0 - register successfully, 10 - invaild username, 11 - user existed, 20 - invaild password, 21 - password unmatched, 404 - error</description>
             </int>
             <string>
                 <key>session</key>
