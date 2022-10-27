@@ -1,7 +1,7 @@
 """
 用于生成Python代码
 """
-from src.models import APIData
+from src.models import APIData  # pylint:disable=import-error
 
 CLASS_DECLARATION = '''
 class {name}:

@@ -1,0 +1,18 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/user/register</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="RegisterRequest">
+            <description>注册请求</description>
+            <string>
+                <key>userName</key>
+                <description>用户名</description>
+            </string>
+            <string>
+                <key>password</key>
+                <description>密码</description>
+            </string>
+        </class>
+    </main-class>
+</api-data>
