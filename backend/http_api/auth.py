@@ -1,18 +1,19 @@
 import functools
 from glob import escape
 from random import getrandbits
-from multiprocessing.spawn import import_main_path
+from urllib import response
 from flask import (
-    Blueprint, flash, g, redirect, request, session, url_for
+    Blueprint, g, redirect, request, session, url_for
 )
 from db import db
 from db.models.user import UserData
 
 from generated.login.LoginRequest import LoginRequest
+from generated.logout.LogoutRequest import LogoutRequest
 from generated.register.RegisterRequest import RegisterRequest
 # from werkzeug.security import check_password_hash, generate_password_hash
 
-login_user = {}
+login_user = {}  # {session:id}
 auth_bp = Blueprint('auth', __name__, url_prefix='/user')
 
 # function for testing
@@ -48,7 +49,7 @@ def login():
             error = 'login already'
             responseData['code'] = 3
 
-        if error is None:
+        if error is None or error == 'login already':
             # verified, login user
             print('Verified')
             temp_session = loginUser(username)
@@ -153,11 +154,11 @@ def addUser(username, password):
     return
 
 
-def getGeneratedSession(username):
-    ss = login_user.get(username)
-    if ss is None:
-        return hex(getrandbits(128))
-    return ss
+def getGeneratedSession(user_id):
+    for session, id in login_user.items():
+        if id == user_id:
+            return session
+    return hex(getrandbits(128))
 
 
 # log in and out methods modifying session
@@ -165,11 +166,11 @@ def getGeneratedSession(username):
 def loginUser(username):
     current_user = db.session.query(UserData).filter_by(name=username).first()
     if current_user:
-        session['username'] = current_user.name
-        session['userid'] = current_user.id
-        temp_session = getGeneratedSession(username)
-        login_user[username] = temp_session
+        session['currentUserId'] = current_user.id
+        temp_session = getGeneratedSession(current_user.id)
+        login_user[temp_session] = current_user.id
         print('user', username, 'login!')
+        print('session', temp_session)
     else:
         # raise error: undefined user
         print('undefined user')
@@ -179,20 +180,29 @@ def loginUser(username):
 
 def userIsLogged(username):
     # Bug: user could be covered by other login users
-    if 'username' in session:
-        current_user = session.get('username')
-        return True if current_user == username else False
+    current_user = db.session.query(UserData).filter_by(name=username).first()
+    if current_user:
+        if current_user.id in login_user.values():
+            return True
     return False
 
 
-@auth_bp.route('/logout')
+@auth_bp.route('/logout', methods=['GET', 'POST'])
 def logout():
-    username = session.pop('username', None)
-    session.pop('userid', None)
-    if username:
-        print('{} logged out successfully!'.format(username))
-    # return 'logout'
-    return redirect(url_for('auth.login'))
+    responseData = {}
+    responseData['code'] = -1
+    responseData['userName'] = None
+    if request.method == 'POST':
+        requestData = LogoutRequest(request)
+        session = requestData.session
+        print('logout session', session)
+        if (login_user.get(session)):
+            login_user.pop(session)
+            print('{} logged out successfully!'.format(
+                requestData.userName))
+            responseData['code'] = 0
+            responseData['userName'] = requestData.userName
+    return responseData
 
 
 '''
@@ -202,7 +212,7 @@ def logout():
 
 @auth_bp.before_app_request
 def loadLoggedInUser():
-    user_id = session.get('userid')
+    user_id = session.get('currentUserId')
 
     if user_id is None:
         g.user = None
