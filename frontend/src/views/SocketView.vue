@@ -23,21 +23,28 @@ export default defineComponent({
         const socketStore = useSocketStore();
         return { socketStore };
     },
+    methods: {
+        showData(d: any) {
+            this.data = d;
+            console.log(d);
+        },
+    },
     created() {
-        this.socketStore.socket.on('connect', () => {
+        this.socketStore.manager.subscribe('connect', () => {
             if (!this.userStore.loggedIn) {
                 console.log('Not logged!');
             } else {
-                let socket_id = this.socketStore.socket.id;
+                let socket_id = this.socketStore.manager.getSocketID();
                 let user_session = this.userStore.session;
-                this.socketStore.socket.emit('test', socket_id, user_session);
+                this.socketStore.manager.emitToSocket(
+                    'test',
+                    socket_id,
+                    user_session
+                );
                 console.log('socket id: ' + socket_id);
             }
         });
-        this.socketStore.socket.on('response', (data) => {
-            this.data = data;
-            console.log(data);
-        });
+        // this.socketStore.manager.subscribe('response', this.showData);
     },
     data() {
         return {
@@ -51,11 +58,11 @@ export default defineComponent({
     },
     mounted() {
         console.log('mounted');
-        this.socketStore.socket.connect();
+        this.socketStore.manager.connect();
     },
     unmounted() {
-        if (this.socketStore.socket.connected) {
-            this.socketStore.socket.disconnect();
+        if (this.socketStore.manager.connected) {
+            this.socketStore.manager.disconnect();
             console.log('disconnected');
         }
         console.log('unmounted');

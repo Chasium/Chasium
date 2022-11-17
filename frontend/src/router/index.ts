@@ -11,7 +11,6 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: HomeView,
-            // component: SocketView,
         },
         {
             path: '/register',

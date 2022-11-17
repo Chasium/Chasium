@@ -15,7 +15,7 @@ def test(socket_id, user_session):
     print('test from client ' + socket_id)
     print('user: ' + user_session)
     ws_api.sleep(1)
-    ws_api.emit('response', {'message': 'OK'}, namespace='/chat')
+    ws_api.emit('fireEvent', 'response', {'message': 'OK'}, namespace='/chat')
 
 
 '''
