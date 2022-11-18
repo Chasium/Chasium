@@ -10,12 +10,17 @@ from flask_socketio import (
 ws_api = SocketIO()
 
 
+@ws_api.on('connect', namespace='/chat')
+def connect_by_client():
+    ws_api.emit('FireEvent', {'EventName': 'connected'}, namespace='/chat')
+
+
 @ws_api.on('test', namespace='/chat')
 def test(socket_id, user_session):
     print('test from client ' + socket_id)
     print('user: ' + user_session)
-    ws_api.sleep(1)
-    ws_api.emit('fireEvent', 'response', {'message': 'OK'}, namespace='/chat')
+    ws_api.emit('FireEvent', {'EventName': 'response',
+                'Data': {'Msg': 'ok', 'User': user_session}}, namespace='/chat')
 
 
 '''

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { io } from 'socket.io-client';
-import EventEmitter from 'node:events';
+import EventEmitter from 'eventemitter3';
 
 export const useSocketStore = defineStore('socket', {
     state() {
@@ -16,28 +16,41 @@ export const useSocketStore = defineStore('socket', {
 export class SocketManager extends EventEmitter {
     private socket;
     public eventDict;
-    public connected: Boolean;
+    public connected: Boolean = false;
     constructor() {
         super();
         this.socket = io('http://127.0.0.1:5000/chat', { autoConnect: false });
         this.eventDict = {};
-        this.connected = false;
-        this.socket.on('fireEvent', this.fireEvent);
+        this.socket.on('FireEvent', (args: any) => {
+            const ev = args['EventName'];
+            const data = args['Data'];
+            console.log(args);
+            console.log('Event', ev, 'Fire!');
+            console.log('args:', data);
+            this.emit(ev, data);
+        });
+        this.socket.on('connect', () => {
+            console.log(this.socket.connected);
+        });
     }
 
-    private fireEvent(evName: string, ...args: any[]) {
-        this.emit(evName, args);
-    }
-
-    public emitToSocket(ev: string, ...args: any[]) {
-        this.socket.emit(ev, args);
+    public emitToSocket(ev: string, ...args: any[] | []) {
+        console.log('Event emitted:', ev);
+        console.log('args:', ...args);
+        if (args.length == 0) {
+            this.socket.emit(ev);
+        } else {
+            this.socket.emit(ev, ...args);
+        }
     }
 
     public subscribe(ev: string, listener: (args: any[]) => void) {
+        console.log('Event subscribed:', ev);
         this.addListener(ev, listener);
     }
 
     public unsubscribe(ev: string, listener: (args: any[]) => void) {
+        console.log('Event', ev, 'unsubscribed');
         this.removeListener(ev, listener);
     }
 

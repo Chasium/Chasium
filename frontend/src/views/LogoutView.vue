@@ -32,7 +32,7 @@ export default defineComponent({
                     }
                 );
                 if (response.data['code'] === 0) {
-                    alert('user ' + response.data['userName'] + ' logout!');
+                    // alert('user ' + response.data['userName'] + ' logout!');
                 } else {
                     alert('error');
                 }

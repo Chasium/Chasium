@@ -2,6 +2,8 @@
     <el-container>
         <el-header>SocketIO Test</el-header>
         <div>
+            <button @click="fireEventTest">test</button>
+            <br />
             <span>Flask response</span>
             <br />
             <span>{{ data }}</span>
@@ -25,30 +27,38 @@ export default defineComponent({
     },
     methods: {
         showData(d: any) {
-            this.data = d;
-            console.log(d);
+            if (this.user_session == d['User']) {
+                this.data = d;
+                console.log(d);
+            }
+        },
+        fireEventTest() {
+            this.socketStore.manager.emit('init');
         },
     },
     created() {
-        this.socketStore.manager.subscribe('connect', () => {
+        this.socketStore.manager.subscribe('init', () => {
             if (!this.userStore.loggedIn) {
                 console.log('Not logged!');
             } else {
                 let socket_id = this.socketStore.manager.getSocketID();
-                let user_session = this.userStore.session;
+                this.user_session = this.userStore.session;
                 this.socketStore.manager.emitToSocket(
                     'test',
                     socket_id,
-                    user_session
+                    this.user_session
                 );
-                console.log('socket id: ' + socket_id);
             }
         });
-        // this.socketStore.manager.subscribe('response', this.showData);
+        this.socketStore.manager.subscribe('response', this.showData);
+        this.socketStore.manager.subscribe('connected', () => {
+            console.log('server response!');
+        });
     },
     data() {
         return {
             data: {},
+            user_session: '',
         };
     },
     computed: {
@@ -65,6 +75,9 @@ export default defineComponent({
             this.socketStore.manager.disconnect();
             console.log('disconnected');
         }
+        // this.socketStore.manager.removeListener('init');
+        // this.socketStore.manager.removeListener('response');
+        // this.socketStore.manager.removeListener('connected');
         console.log('unmounted');
     },
 });

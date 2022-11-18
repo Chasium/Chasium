@@ -169,8 +169,8 @@ def loginUser(username):
         session['currentUserId'] = current_user.id
         temp_session = getGeneratedSession(current_user.id)
         login_user[temp_session] = current_user.id
-        print('user', username, 'login!')
-        print('session', temp_session)
+        # print('user', username, 'login!')
+        # print('session', temp_session)
     else:
         # raise error: undefined user
         print('undefined user')
