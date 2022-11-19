@@ -11,10 +11,6 @@
                         class="input_data"
                     />
                 </el-form-item>
-                <!-- 
-                    asasdasd
-                 -->
-                
                 <el-form-item class="user-data">
                     <input
                         type="password"
