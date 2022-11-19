@@ -1,6 +1,6 @@
 <!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
 <api-data>
-    <api-path>/user/login</api-path>
+    <api-path>/auth/login</api-path>
     <http-request />
     <main-class>
         <class class-name="LoginRequest">
