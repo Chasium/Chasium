@@ -9,6 +9,10 @@
       "name": "后端"
     },
     {
+      "path": "backend_js",
+      "name": "运行js代码项目"
+    },
+    {
       "path": "apigen",
       "name": "apigen项目"
     },
