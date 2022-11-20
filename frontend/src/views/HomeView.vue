@@ -91,7 +91,8 @@ export default defineComponent({
                     this.userStore.session = response.data['session'];
                     console.log('user session: ' + this.userStore.session);
                     this.userStore.loggedIn = true;
-                    this.$router.push('/chat');
+                    // this.$router.push('/chat');
+                    this.$router.push('/lobby');
                 } else if (response.data['code'] === 1) {
                     this.showUserWrong = true;
                     this.userStore.loggedIn = false;

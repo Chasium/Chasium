@@ -1,10 +1,12 @@
 import functools
+import re
 from glob import escape
 from random import getrandbits
 from urllib import response
 from flask import (
     Blueprint, g, redirect, request, session, url_for
 )
+from .config import login_user
 from db import db
 from db.models.user import UserData
 
@@ -13,7 +15,6 @@ from generated.logout.LogoutRequest import LogoutRequest
 from generated.register.RegisterRequest import RegisterRequest
 # from werkzeug.security import check_password_hash, generate_password_hash
 
-login_user = {}  # {session:id}
 auth_bp = Blueprint('auth', __name__, url_prefix='/user')
 
 # function for testing
@@ -129,20 +130,22 @@ def userIsExisted(username):
 
 
 def UsernameIsLegal(username):
-    return True if username else False
+    username_rule = r'^[A-Za-z\d_]{3,32}$'
+    matching = re.fullmatch(username_rule, username)
+    return True if matching else False
 
 
 def PasswordIsLegal(password):
-    return True if password else False
+    p = r"^[A-Za-z\d~`!@#$%^&*()_\-+=\[\]\{\}|:;<>]{6,32}"
+    matching = re.fullmatch(p, password)
+    return True if matching else False
 
 
 # user data interactions
 
 def passwordVerified(username, password):
     user = db.session.query(UserData).filter_by(name=username).first()
-    if password == user.password:
-        return True
-    return False
+    return True if password == user.password else False
 
 
 def addUser(username, password):

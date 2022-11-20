@@ -1,0 +1,18 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/lobby</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="RoomCreationRequest">
+            <description>大厅创建房间请求</description>
+            <string>
+                <key>hostName</key>
+                <description>主持人名</description>
+            </string>
+            <string>
+                <key>hostSession</key>
+                <description>主持人会话ID</description>
+            </string>
+        </class>
+    </main-class>
+</api-data>
