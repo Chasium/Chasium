@@ -31,6 +31,12 @@ def createRoom():
 
     return responseData
 
+@lobby_bp.route("/getRooms", methods=['GET', 'POST'])
+def getRooms():
+    responseData = {}
+    responseData['roomID'] = list(active_room.keys())
+    return responseData
+
 
 def joinRoom():
     pass

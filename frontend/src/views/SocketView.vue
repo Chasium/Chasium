@@ -8,7 +8,7 @@
             <br />
             <span>{{ data }}</span>
             <div>
-                <router-link to="/logout">Logout</router-link>
+                <button @click="logout">Logout</button>
             </div>
         </div>
     </el-container>
@@ -32,8 +32,21 @@ export default defineComponent({
                 console.log(d);
             }
         },
-        fireEventTest() {
+        async fireEventTest() {
             this.socketStore.manager.emit('init');
+        },
+        async logout() {
+            if (this.socketStore.manager.connected) {
+                this.socketStore.manager.emitToSocket(
+                    'leave',
+                    this.userStore.session
+                );
+                this.socketStore.manager.disconnect();
+                console.log('disconnected');
+                this.$router.push('/logout');
+            } else {
+                console.log('fucked');
+            }
         },
     },
     created() {
@@ -54,6 +67,9 @@ export default defineComponent({
         this.socketStore.manager.subscribe('connected', () => {
             console.log('server response!');
         });
+        this.socketStore.manager.subscribe('disconnected', () => {
+            console.log('disconnected!');
+        });
     },
     data() {
         return {
@@ -69,15 +85,9 @@ export default defineComponent({
     mounted() {
         console.log('mounted');
         this.socketStore.manager.connect();
+        this.socketStore.manager.emitToSocket('join', this.userStore.session);
     },
     unmounted() {
-        if (this.socketStore.manager.connected) {
-            this.socketStore.manager.disconnect();
-            console.log('disconnected');
-        }
-        // this.socketStore.manager.removeListener('init');
-        // this.socketStore.manager.removeListener('response');
-        // this.socketStore.manager.removeListener('connected');
         console.log('unmounted');
     },
 });

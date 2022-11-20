@@ -5,14 +5,23 @@
 from flask_socketio import (
     SocketIO, send, emit, join_room, leave_room
 )
-
+from http_api import config
 
 ws_api = SocketIO()
 
 
-@ws_api.on('connect', namespace='/chat')
-def connect_by_client():
-    ws_api.emit('FireEvent', {'EventName': 'connected'}, namespace='/chat')
+@ws_api.on('join', namespace='/chat')
+def connect_by_client(session):
+    join_room(session)
+    ws_api.emit('FireEvent', {'EventName': 'connected'},
+                namespace='/chat', to=session)
+
+
+@ws_api.on('leave', namespace='/chat')
+def disconnect_by_client(session):
+    ws_api.emit('FireEvent', {'EventName': 'disconnected'},
+                namespace='/chat', to=session)
+    leave_room(session)
 
 
 @ws_api.on('test', namespace='/chat')
@@ -20,7 +29,14 @@ def test(socket_id, user_session):
     print('test from client ' + socket_id)
     print('user: ' + user_session)
     ws_api.emit('FireEvent', {'EventName': 'response',
-                'Data': {'Msg': 'ok', 'User': user_session}}, namespace='/chat')
+                'Data': {'Msg': 'ok', 'User': user_session}}, namespace='/chat', to=user_session)
+
+
+@ws_api.on('createRoom', namespace='/chat')
+def updateRoomList(socket_id, user_session):
+    rooms = config.active_room.keys()
+    ws_api.emit('FireEvent', {'EventName': 'updateRoomList',
+                'Data': {'RoomList': rooms}}, namespace='/chat')
 
 
 '''

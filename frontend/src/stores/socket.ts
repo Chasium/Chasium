@@ -24,7 +24,6 @@ export class SocketManager extends EventEmitter {
         this.socket.on('FireEvent', (args: any) => {
             const ev = args['EventName'];
             const data = args['Data'];
-            console.log(args);
             console.log('Event', ev, 'Fire!');
             console.log('args:', data);
             this.emit(ev, data);
