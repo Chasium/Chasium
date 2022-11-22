@@ -30,7 +30,7 @@ const router = createRouter({
             component: SocketView,
         },
         {
-            path: '/room/:roomid(\\d+)',
+            path: '/room/:roomID(\\d+)',
             name: 'preparation',
             component: RoomView,
         },

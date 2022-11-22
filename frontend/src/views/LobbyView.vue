@@ -44,6 +44,11 @@ export default defineComponent({
     components: {
         RoomItem,
     },
+    created() {
+        this.socketStore.manager.subscribe('UpdateRoom', () => {
+            this.updateRoom();
+        });
+    },
     data() {
         return {
             data: {},
@@ -52,7 +57,7 @@ export default defineComponent({
         };
     },
     methods: {
-        // TODO: refresh from backend
+        // TODO: receive socket event from backend
         async updateRoom() {
             try {
                 let response = await axios.post<{ roomID: Number[] }>(
@@ -79,8 +84,8 @@ export default defineComponent({
                 );
                 let roomID = response.data['id'];
                 if (roomID != -1) {
-                    this.updateRoom();
-                    // this.$router.push('/room/' + roomID);
+                    this.socketStore.manager.emitToSocket('createRoom');
+                    this.joinRoom(roomID);
                 } else {
                     alert('fail');
                 }
@@ -90,8 +95,31 @@ export default defineComponent({
         },
         // TODO: seperate player and host
         async joinRoom(roomID: Number) {
-            console.log('join room ' + roomID + '!');
-            this.$router.push('/room/' + roomID);
+            // TODO: check if room still exist by first
+            try {
+                let response = await axios.post<{ code: Number }>(
+                    '/lobby/join',
+                    {
+                        username: this.userStore.userName,
+                        session: this.userStore.session,
+                        roomID: roomID,
+                    }
+                );
+                if (response.data['code'] != -1) {
+                    this.socketStore.manager.emitToSocket(
+                        'joinRoom',
+                        roomID,
+                        this.userStore.userName
+                    );
+                    // console.log('join room ' + roomID + '!');
+                    this.$router.push('/room/' + roomID);
+                } else {
+                    alert('something wrong to this room...');
+                    this.updateRoom();
+                }
+            } catch (err) {
+                alert('error');
+            }
         },
     },
     computed: {
@@ -100,10 +128,11 @@ export default defineComponent({
         },
     },
     mounted() {
-        // console.log('mounted');
+        this.updateRoom();
+        // console.log(this.socketStore.manager.connected);
     },
-    unmounted() {
-        // console.log('unmounted');
-    },
+    // unmounted() {
+    //     // console.log('unmounted');
+    // },
 });
 </script>

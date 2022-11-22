@@ -1,3 +1,4 @@
+import asyncio
 from ws_api import ws_api
 
 
@@ -70,6 +71,18 @@ class Room:
             self.notifyPlayer(player)
         self.__playerList = []
 
+
+def getRoom(roomID: int):
+    return active_room.get(roomID)
+
+
+def setRoom(roomID: int, room: Room):
+    if roomID in active_room:
+        active_room[roomID] = room
+
+
+async def removeRoom(roomID: int):
+    active_room.pop(roomID, None)
 
 active_room: dict[int, Room] = {}
 login_user = {}

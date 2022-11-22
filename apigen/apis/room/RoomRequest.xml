@@ -3,8 +3,8 @@
     <api-path>/lobby</api-path>
     <http-request />
     <main-class>
-        <class class-name="ExitRoomRequest">
-            <description>離開房间请求</description>
+        <class class-name="RoomRequest">
+            <description>房间请求</description>
             <string>
                 <key>roomID</key>
                 <description>房间号</description>

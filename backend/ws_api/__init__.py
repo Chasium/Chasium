@@ -32,11 +32,41 @@ def test(socket_id, user_session):
                 'Data': {'Msg': 'ok', 'User': user_session}}, namespace='/chat', to=user_session)
 
 
+'''
+    Room socket functions.
+'''
+
+# not receiving broadcast
+
+
 @ws_api.on('createRoom', namespace='/chat')
-def updateRoomList(socket_id, user_session):
-    rooms = config.active_room.keys()
-    ws_api.emit('FireEvent', {'EventName': 'updateRoomList',
-                'Data': {'RoomList': rooms}}, namespace='/chat')
+def updateRoom():
+    print('broadcast!')
+    ws_api.emit('FireEvent', {'EventName': 'UpdateRoom'},
+                namespace='/chat', broadcast=True)
+
+
+@ws_api.on('joinRoom', namespace='/chat')
+def addUserToRoom(roomID, username):
+    print('addUserToRoom')
+    join_room(roomID)
+    ws_api.emit('FireEvent', {'EventName': 'NewMsg',
+                'Data': {'Msg': username + ' join the room!'}}, namespace='/chat', to=roomID)
+
+
+@ws_api.on('leaveRoom', namespace='/chat')
+def removeUserFromRoom(roomID, username):
+    print('removeUserFromRoom')
+    ws_api.emit('FireEvent', {'EventName': 'NewMsg',
+                              'Data': {'Msg': username + ' leave the room!'}}, namespace='/chat', to=roomID)
+    leave_room(roomID)
+
+
+@ws_api.on('dismissRoom', namespace='/chat')
+def dismissRoom(roomID, username):
+    print(username, 'DismissRoom', roomID)
+    ws_api.emit('FireEvent', {'EventName': 'DismissRoom'},
+                namespace='/chat')
 
 
 '''

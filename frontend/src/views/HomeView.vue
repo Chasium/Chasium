@@ -41,9 +41,14 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import type LoginResponse from '@/generated/login/LoginResponse';
 import { useUserStore } from '@/stores/user';
+import { useSocketStore } from '@/stores/socket';
 import { stringLiteral } from '@babel/types';
 
 export default defineComponent({
+    setup() {
+        const socketStore = useSocketStore();
+        return { socketStore };
+    },
     data() {
         return {
             showUser: false,
@@ -92,6 +97,11 @@ export default defineComponent({
                     console.log('user session: ' + this.userStore.session);
                     this.userStore.loggedIn = true;
                     // this.$router.push('/chat');
+                    this.socketStore.manager.connect();
+                    this.socketStore.manager.emitToSocket(
+                        'join',
+                        this.userStore.session
+                    );
                     this.$router.push('/lobby');
                 } else if (response.data['code'] === 1) {
                     this.showUserWrong = true;
