@@ -11,7 +11,7 @@
                         class="input_data"
                     />
                 </el-form-item>
-                <el-form-item class="user-data">
+                <el-form-item class="user-data">  
                     <input
                         type="password"
                         v-model="form.password"
