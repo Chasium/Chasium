@@ -86,7 +86,7 @@ export default defineComponent({
                     response.data['code'] === 3
                 ) {
                     alert('登录成功');
-                    //TODO：跳转到主页面
+                    this.$router.push('/main');
                     this.userStore.userName = this.form.userName;
                     this.userStore.session = response.data['session'];
                     this.userStore.loggedIn = true;

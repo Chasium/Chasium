@@ -1,5 +1,5 @@
 <template>
-    <h1>我是User</h1>
+    <h1>我是Settings</h1>
 </template>
 
 <script lang="ts">
