@@ -90,8 +90,8 @@ export default defineComponent({
                     response.data['code'] === 0 ||
                     response.data['code'] === 3
                 ) {
-                    // alert('登录成功');
-                    //TODO：跳转到主页面
+                    alert('登录成功');
+                    
                     this.userStore.userName = this.form.userName;
                     this.userStore.session = response.data['session'];
                     console.log('user session: ' + this.userStore.session);
@@ -102,7 +102,8 @@ export default defineComponent({
                         'join',
                         this.userStore.session
                     );
-                    this.$router.push('/lobby');
+                    // this.$router.push('/lobby');
+                    this.$router.push('/begin');
                 } else if (response.data['code'] === 1) {
                     this.showUserWrong = true;
                     this.userStore.loggedIn = false;

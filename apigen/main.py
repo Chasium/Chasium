@@ -5,6 +5,7 @@ import re
 import shutil
 import glob
 import sys
+import os
 from src.models import ModelsException
 from src.generator import Generator
 
@@ -21,8 +22,10 @@ if __name__ == "__main__":
                 f += glob.glob(f"apis/{i}")
     else:
         f = glob.glob("apis/**/*.xml")
-        shutil.rmtree(Generator.PY_PATH + '/generated')
-        shutil.rmtree(Generator.TS_PATH + '/generated')
+        if os.path.isdir(Generator.PY_PATH + '/generated'):
+            shutil.rmtree(Generator.PY_PATH + '/generated')
+        if os.path.isdir(Generator.TS_PATH + '/generated'):
+            shutil.rmtree(Generator.TS_PATH + '/generated')
 
     if f is not None:
         for file in f:

@@ -47,8 +47,6 @@
 </template>
 
 <script lang="ts">
-import { throwStatement } from '@babel/types';
-import { parseStringStyle } from '@vue/shared';
 import axios from 'axios';
 import type RegisterResponse from '@/generated/register/RegisterResponse';
 import { useUserStore } from '@/stores/user';
@@ -111,7 +109,7 @@ export default defineComponent({
                 if (response.data['code'] === 0) {
                     alert('注册成功');
                     this.userStore.userName = this.form.userName;
-                    this.$router.push('/');
+                    this.$router.push('/login');
                 } else if (response.data['code'] === 10) {
                     this.showUserWrong = true;
                     alert('用户名不合法');
