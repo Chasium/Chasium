@@ -1,0 +1,18 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/user/logout</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="LogoutRequest">
+            <description>登出请求</description>
+            <string>
+                <key>userName</key>
+                <description>用户名</description>
+            </string>
+            <string>
+                <key>session</key>
+                <description>会话ID</description>
+            </string>
+        </class>
+    </main-class>
+</api-data>

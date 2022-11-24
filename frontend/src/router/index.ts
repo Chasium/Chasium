@@ -9,6 +9,10 @@ import ScriptView from '@/views/ScriptView.vue';
 import TemplateCardView from '@/views/TemplateCardView.vue';
 import MyTemplateCardView from '@/views/MyTemplateCardView.vue';
 import CardView from '@/views/CardView.vue';
+import SocketView from '@/views/SocketView.vue';
+import LogoutView from '@/views/LogoutView.vue';
+import LobbyView from '@/views/LobbyView.vue';
+import RoomView from '@/views/RoomView.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +41,26 @@ const router = createRouter({
                 { path: 'template', component: TemplateCardView },
                 { path: 'mytemplate', component: MyTemplateCardView },
             ],
+        },
+        {
+            path: '/logout',
+            name: 'logout',
+            component: LogoutView,
+        },
+        {
+            path: '/chat',
+            name: 'chatroom',
+            component: SocketView,
+        },
+        {
+            path: '/room/:roomID(\\d+)',
+            name: 'preparation',
+            component: RoomView,
+        },
+        {
+            path: '/lobby',
+            name: 'select room',
+            component: LobbyView,
         },
     ],
 });
