@@ -7,7 +7,7 @@
         <div class="r-content">
             <el-dropdown>
                 <span class="el-dropdown-link">
-                    <img class="user-img" src="@/assets/images/user.jfif" />
+                    <img class="user-img" src="@/assets/images/user.png" />
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -36,7 +36,7 @@ export default defineComponent({
     },
     methods: {
         clickUser() {
-            this.$router.push('/main/user');
+            this.$router.push('/user');
         },
         exitUser() {
             ElMessageBox.confirm('确认退出账户？', '提示', {
@@ -46,6 +46,7 @@ export default defineComponent({
             })
                 .then(() => {
                     this.$router.push('/');
+                    //TODO:退出账户
                     ElMessage({
                         type: 'success',
                         message: '用户已退出',

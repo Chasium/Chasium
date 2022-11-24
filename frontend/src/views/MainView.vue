@@ -39,31 +39,8 @@ export default defineComponent({
     height: 100%;
 }
 .el-header {
-    // background-color: #363d40;
-    // // 给头部设置一下弹性布局
-    // display: flex;
-    // // 让它贴标左右对齐
-    // justify-content: space-between;
-    // // 清空图片左侧padding
     padding-left: 0;
     padding-right: 0;
-    // // 按钮居中
-    // align-items: center;
-    // // 文本颜色
-    // color: #fff;
-    // // 设置文本字体大小
-    // font-size: 20px;
-    // // 嵌套
-    // > div {
-    //     // 弹性布局
-    //     display: flex;
-    //     // 纵向上居中对齐
-    //     align-items: center;
-    //     // 给文本和图片添加间距，使用类选择器
-    //     span {
-    //         margin-left: 15px;
-    //     }
-    // }
 }
 .el-aside {
     background-color: #313743;

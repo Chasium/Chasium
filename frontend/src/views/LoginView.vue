@@ -41,7 +41,6 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import type LoginResponse from '@/generated/login/LoginResponse';
 import { useUserStore } from '@/stores/user';
-import { stringLiteral } from '@babel/types';
 
 export default defineComponent({
     data() {
@@ -86,7 +85,7 @@ export default defineComponent({
                     response.data['code'] === 3
                 ) {
                     alert('登录成功');
-                    this.$router.push('/main');
+                    this.$router.push('/begin');
                     this.userStore.userName = this.form.userName;
                     this.userStore.session = response.data['session'];
                     this.userStore.loggedIn = true;

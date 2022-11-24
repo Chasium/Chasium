@@ -70,33 +70,33 @@ export default defineComponent({
             console.log(key, keyPath);
         },
         clickBegin() {
-            if (this.$route.path != '/main/begin') {
-                this.$router.push('/main/begin');
+            if (this.$route.path != '/begin') {
+                this.$router.push('/begin');
             }
         },
         clickCard() {
-            if (this.$route.path != '/main/card') {
-                this.$router.push('/main/card');
+            if (this.$route.path != '//card') {
+                this.$router.push('/card');
             }
         },
         clickTemplate() {
-            if (this.$route.path != '/main/template') {
-                this.$router.push('/main/template');
+            if (this.$route.path != '/template') {
+                this.$router.push('/template');
             }
         },
         clickMyTemplate() {
-            if (this.$route.path != '/main/mytemplate') {
-                this.$router.push('/main/mytemplate');
+            if (this.$route.path != '/mytemplate') {
+                this.$router.push('/mytemplate');
             }
         },
         clickScript() {
-            if (this.$route.path != '/main/script') {
-                this.$router.push('/main/script');
+            if (this.$route.path != '/script') {
+                this.$router.push('/script');
             }
         },
         clickMyScript() {
-            if (this.$route.path != '/main/myscript') {
-                this.$router.push('/main/myscript');
+            if (this.$route.path != '/myscript') {
+                this.$router.push('myscript');
             }
         },
     },
