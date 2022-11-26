@@ -8,6 +8,7 @@ import config
 
 http_api.config.from_object(config)
 db.init_app(http_api)
+ws_api.init_app(http_api, cors_allowed_origins="*")
 
 if __name__ == '__main__':
     ws_api.run(http_api)

@@ -1,0 +1,18 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/user/logout</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="LogoutResponse">
+            <description>登出响应</description>
+            <int>
+                <key>code</key>
+                <description>响应代码: 0 - logout successfully, otherwise - error</description>
+            </int>
+            <string>
+                <key>userName</key>
+                <description>用户名</description>
+            </string>
+        </class>
+    </main-class>
+</api-data>

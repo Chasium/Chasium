@@ -1,0 +1,22 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/lobby</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="JoinRoomRequest">
+            <description>大厅加入房间请求</description>
+            <string>
+                <key>username</key>
+                <description>用戶名</description>
+            </string>
+            <string>
+                <key>session</key>
+                <description>会话ID</description>
+            </string>
+            <int>
+                <key>roomID</key>
+                <description>房间号</description>
+            </int>
+        </class>
+    </main-class>
+</api-data>
