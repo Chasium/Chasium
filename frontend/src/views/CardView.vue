@@ -1,11 +1,11 @@
 <template>
     <el-button @click="showDialog">show Dialog</el-button>
     <div id="dialog-cover" style="display: none"></div>
-    <dialog id="dialog-box">
-        <card-script-dialog />
-        <div style="margin-top: 50px; margin-left: 50%">
+    <dialog id="dialog-box" style="display: none">
+        <card-script-dialog ref="cardscriptdialog" id="scriptDialog" />
+        <div style="margin-top: 50px; margin-left: 70%">
             <el-button @click="noDialog">取 消</el-button>
-            <el-button type="primary" @click="noDialog">导 入</el-button>
+            <el-button type="primary" @click="importScript">导 入</el-button>
         </div>
     </dialog>
 </template>
@@ -28,7 +28,15 @@ export default defineComponent({
         noDialog() {
             document.getElementById('dialog-cover').style.display = 'none';
             document.getElementById('dialog-box').style.display = 'none';
-            console.log('show');
+            console.log('hidden');
+        },
+        importScript() {
+            const val = this.$refs.cardscriptdialog.updateModelValue();
+            console.log('get val:\n', val);
+            // TODO: 把脚本存入数据库
+
+            document.getElementById('dialog-cover').style.display = 'none';
+            document.getElementById('dialog-box').style.display = 'none';
         },
     },
 });
@@ -46,12 +54,10 @@ export default defineComponent({
     filter: alpha(opacity=30);
 }
 #dialog-box {
-    width: 500px;
-    height: 800px;
     border: none !important;
     border-radius: calc(5px * var(--ratio));
     box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     padding: 1.6rem;
-    max-width: 400px;
+    max-width: 600px;
 }
 </style>

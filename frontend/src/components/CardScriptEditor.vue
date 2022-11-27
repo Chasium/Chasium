@@ -11,12 +11,12 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import * as monaco from 'monaco-editor';
+var script = '/* Please enter your script here :) */';
 
 export default defineComponent({
     name: 'monacoEditor',
     props: editorProps,
-    emits: ['update:modelValue', 'change', 'editor-mounted'],
-    setup(props, { emit }) {
+    setup(props) {
         self.MonacoEnvironment = {
             getWorker(_: string, label: string) {
                 if (label === 'json') {
@@ -58,16 +58,13 @@ export default defineComponent({
 
             // 监听值的变化
             editor.onDidChangeModelContent(() => {
-                const value = editor.getValue(); //给父组件实时返回最新文本
-                emit('update:modelValue', value);
-                emit('change', value);
+                script = editor.getValue(); //给父组件实时返回最新文本
             });
-
-            emit('editor-mounted', editor);
         };
         watch(
             () => props.modelValue,
             (newValue) => {
+                // 实时更新editor
                 if (editor) {
                     const value = editor.getValue();
                     if (newValue !== value) {
@@ -99,15 +96,19 @@ export default defineComponent({
         onMounted(() => {
             init();
         });
-
         return { codeEditBox };
+    },
+    methods: {
+        childMethod() {
+            return script;
+        },
     },
 });
 </script>
 
 <style lang="scss" scoped>
 .codeEditBox {
-    width: 500px;
+    width: 550px;
     height: 500px;
 }
 </style>

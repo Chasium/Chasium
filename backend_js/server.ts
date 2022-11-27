@@ -1,5 +1,5 @@
 // Start a websocket server
-// copied from https://www.youtube.com/watch?v=h5B0iOz8vVg
+
 import { WebSocketServer } from "ws";
 import EvalJSScript from "./main";
 
@@ -11,9 +11,7 @@ wss.on("connection", (ws) => {
   ws.on("message", (data) => {
     console.log(`received message from client: ${data}`);
     const result = EvalJSScript(`${data}`);
-    var msg = JSON.stringify({
-      result: result,
-    });
+    var msg = JSON.stringify(result);
     ws.send(msg);
   });
   ws.send(`hello, this is server.ts!`);

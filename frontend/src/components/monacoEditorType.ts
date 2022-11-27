@@ -21,7 +21,7 @@ export interface Options {
 export const editorProps = {
     modelValue: {
         type: String,
-        default: null,
+        default: '/* Please enter your script here :) */',
     },
     width: {
         type: [String, Number],
@@ -40,7 +40,7 @@ export const editorProps = {
         validator(value: string): boolean {
             return ['vs', 'hc-black', 'vs-dark'].includes(value);
         },
-        default: 'vs-dark',
+        default: 'vs',
     },
     options: {
         type: Object,

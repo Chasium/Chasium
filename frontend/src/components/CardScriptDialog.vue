@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 550px">
         <el-form :model="form" :ref="formRef" :rules="rules">
             <el-form-item label="脚本功能" prop="name">
                 <el-input v-model="form.name"></el-input>
@@ -14,7 +14,7 @@
                 ></el-input>
             </el-form-item>
             <el-form-item>
-                <CardScriptEditor />
+                <CardScriptEditor id="editor" ref="editor" />
             </el-form-item>
         </el-form>
     </div>
@@ -65,11 +65,17 @@ export default defineComponent({
         };
     },
     methods: {
-        handleChange() {
-            console.log('enter handleChange');
+        updateModelValue() {
+            const val = this.$refs.editor.childMethod();
+            // console.log('get from Editor:', val);
+            return val;
         },
     },
 });
 </script>
 
-<style></style>
+<style>
+#editor {
+    width: 550px;
+}
+</style>
