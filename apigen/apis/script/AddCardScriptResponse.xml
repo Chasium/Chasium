@@ -1,0 +1,14 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/script</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="AddCardScriptResponse">
+            <description>插入脚本请求</description>
+            <int>
+                <key>code</key>
+                <description>返回代码</description>
+            </int>
+        </class>
+    </main-class>
+</api-data>

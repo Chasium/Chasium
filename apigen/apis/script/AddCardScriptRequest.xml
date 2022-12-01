@@ -1,0 +1,14 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/script</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="AddCardScriptRequest">
+            <description>插入脚本请求</description>
+            <string>
+                <key>scriptContent</key>
+                <description>用户输入的可执行脚本内容</description>
+            </string>
+        </class>
+    </main-class>
+</api-data>

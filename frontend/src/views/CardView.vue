@@ -13,11 +13,19 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import CardScriptDialog from '../components/CardScriptDialog.vue';
+import axios from 'axios';
+import type AddCardScriptResponse from '@/generated/script/AddCardScriptResponse';
+
 export default defineComponent({
     data() {
-        return {};
+        return {
+            uploadSuccess: false,
+        };
     },
     components: { CardScriptDialog },
+    created() {
+        this.uploadSuccess = false;
+    },
     methods: {
         showDialog() {
             //把后面的全都遮盖住
@@ -30,13 +38,35 @@ export default defineComponent({
             document.getElementById('dialog-box').style.display = 'none';
             console.log('hidden');
         },
-        importScript() {
+        async importScript() {
             const val = this.$refs.cardscriptdialog.updateModelValue();
             console.log('get val:\n', val);
             // TODO: 把脚本存入数据库
-
-            document.getElementById('dialog-cover').style.display = 'none';
-            document.getElementById('dialog-box').style.display = 'none';
+            try {
+                let response = await axios.post<AddCardScriptResponse>(
+                    '/script/add',
+                    {
+                        scriptContent: val,
+                    }
+                );
+                this.uploadSuccess = false;
+                if (response.data['code'] === 0) {
+                    alert('提交成功');
+                    this.uploadSuccess = true;
+                    this.$router.push('/login');
+                    document.getElementById('dialog-cover').style.display =
+                        'none';
+                    document.getElementById('dialog-box').style.display =
+                        'none';
+                } else if (response.data['code'] !== 0) {
+                    alert('不合法');
+                } else {
+                    alert('未知错误');
+                }
+            } catch (err) {
+                alert('异常');
+            }
+            this.$router.push('/card');
         },
     },
 });
