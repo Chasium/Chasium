@@ -41,7 +41,6 @@ export default defineComponent({
         async importScript() {
             const val = this.$refs.cardscriptdialog.updateModelValue();
             console.log('get val:\n', val);
-            // TODO: 把脚本存入数据库
             try {
                 let response = await axios.post<AddCardScriptResponse>(
                     '/script/add',
@@ -53,7 +52,6 @@ export default defineComponent({
                 if (response.data['code'] === 0) {
                     alert('提交成功');
                     this.uploadSuccess = true;
-                    this.$router.push('/login');
                     document.getElementById('dialog-cover').style.display =
                         'none';
                     document.getElementById('dialog-box').style.display =
@@ -88,6 +86,7 @@ export default defineComponent({
     border-radius: calc(5px * var(--ratio));
     box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     padding: 1.6rem;
+    padding-top: 0.5rem;
     max-width: 600px;
 }
 </style>

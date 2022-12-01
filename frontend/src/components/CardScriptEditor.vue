@@ -108,7 +108,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .codeEditBox {
-    width: 550px;
-    height: 500px;
+    width: 100%;
+    height: 400px;
 }
 </style>
