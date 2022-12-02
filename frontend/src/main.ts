@@ -10,7 +10,6 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 import piniaPersist from 'pinia-plugin-persist';
 
-const pinia = createPinia();
 const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPersist);
