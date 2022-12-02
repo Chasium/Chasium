@@ -25,6 +25,7 @@
         ref="create-property-dialog"
         v-on:card-edit="onCardEdit"
     />
+    <EditPropertyDialog ref="edit-property-dialog" />
 </template>
 
 <script lang="ts">
@@ -41,6 +42,7 @@ import { refHelper } from '@/utils/refHelper';
 import { type ICardNode, type Tree, NodeType } from '@/trpg/card_template/Tree';
 import { create, property } from 'lodash';
 import { useTEPStore } from '@/stores/templateEditorPersist';
+import EditPropertyDialog from '@/components/template_editor/EditPropertyDialog.vue';
 
 class Data {
     currentTemplate: ICardNode = {
@@ -66,8 +68,16 @@ export default defineComponent({
                 CreatePropertyDialog
             );
         },
+        editPropertyDialog() {
+            return refHelper(this, 'edit-property-dialog', EditPropertyDialog);
+        },
     },
-    components: { TemplateEditorAside, CardPreview, CreatePropertyDialog },
+    components: {
+        TemplateEditorAside,
+        CardPreview,
+        CreatePropertyDialog,
+        EditPropertyDialog,
+    },
     methods: {
         onCardEdit() {
             this.tepStore.buildTemplate();
@@ -182,6 +192,10 @@ export default defineComponent({
         },
         editNode(data: Tree) {
             console.log(data);
+            this.editPropertyDialog.currentNode = data;
+            if (data.type == NodeType.CARD) {
+                this.editPropertyDialog.isCard = true;
+            }
         },
     },
     mounted() {
