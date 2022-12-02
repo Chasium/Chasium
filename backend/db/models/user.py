@@ -12,3 +12,7 @@ class UserData(db.Model):
     def __init__(self, name, password):
         self.name = name
         self.password = password
+    def getId(self):
+        return self.id
+    def getName(self):
+        return self.name

@@ -1,0 +1,14 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/lobby</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="RoomCreationResponse">
+            <description>大厅创建房间响应</description>
+            <int>
+                <key>id</key>
+                <description>房间编号</description>
+            </int>
+        </class>
+    </main-class>
+</api-data>
