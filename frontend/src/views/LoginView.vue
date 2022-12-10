@@ -11,7 +11,7 @@
                         class="input_data"
                     />
                 </el-form-item>
-                <el-form-item class="user-data">  
+                <el-form-item class="user-data">
                     <input
                         type="password"
                         v-model="form.password"
@@ -91,7 +91,7 @@ export default defineComponent({
                     response.data['code'] === 3
                 ) {
                     alert('登录成功');
-                    
+
                     this.userStore.userName = this.form.userName;
                     this.userStore.session = response.data['session'];
                     console.log('user session: ' + this.userStore.session);
@@ -102,8 +102,8 @@ export default defineComponent({
                         'join',
                         this.userStore.session
                     );
-                    // this.$router.push('/lobby');
-                    this.$router.push('/begin');
+                    this.$router.push('/lobby');
+                    // this.$router.push('/begin');
                 } else if (response.data['code'] === 1) {
                     this.showUserWrong = true;
                     this.userStore.loggedIn = false;

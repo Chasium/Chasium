@@ -32,6 +32,8 @@ class Room:
         self.__host: Host = host
         self.__playerList: list[Player] = []
         self.__id = id
+        self.drawing = None
+        self.bg = None
         pass
 
     def printDetail(self):
@@ -86,3 +88,27 @@ async def removeRoom(roomID: int):
 
 active_room: dict[int, Room] = {}
 login_user = {}
+
+
+'''
+    TODO: should move out to somewhere
+'''
+
+
+@ws_api.on('getMapDrawing', namespace='/chat')
+def getMapDrawing(roomID):
+    tempRoom = getRoom(roomID)
+    if (tempRoom):
+        data = tempRoom.drawing
+        ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
+                                  'Data': {'Img': data}}, namespace='/chat', to=roomID)
+
+
+@ws_api.on('updateMapDrawing', namespace='/chat')
+def updateDrawing(roomID, data):
+    # print(data)
+    tempRoom = getRoom(roomID)
+    if (tempRoom):
+        tempRoom.drawing = data
+        ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
+                                  'Data': {'Img': data}}, namespace='/chat', to=roomID)

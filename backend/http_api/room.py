@@ -4,7 +4,6 @@ from flask import (
 )
 from .config import active_room, Room, getRoom, setRoom, removeRoom
 from generated.room.RoomRequest import RoomRequest
-from ws_api import dismissRoom
 
 room_bp = Blueprint('room', __name__, url_prefix='/room')
 

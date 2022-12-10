@@ -5,7 +5,6 @@
 from flask_socketio import (
     SocketIO, send, emit, join_room, leave_room
 )
-from http_api import config
 
 ws_api = SocketIO()
 
@@ -36,8 +35,6 @@ def test(socket_id, user_session):
     Room socket functions.
 '''
 
-# not receiving broadcast
-
 
 @ws_api.on('createRoom', namespace='/chat')
 def updateRoom():
@@ -67,6 +64,37 @@ def dismissRoom(roomID, username):
     print(username, 'DismissRoom', roomID)
     ws_api.emit('FireEvent', {'EventName': 'DismissRoom'},
                 namespace='/chat')
+
+
+# '''
+#     Drawing
+# '''
+
+
+# @ws_api.on('getMapDrawing', namespace='/chat')
+# def getMapDrawing(roomID):
+#     # require roomID
+#     tempDraw = None
+#     tempRoom = getRoom(roomID)
+#     if (tempRoom):
+#         data = tempRoom.drawing
+#     ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
+#                 'Data': {'Img': data}}, namespace='/chat', to=roomID)
+
+
+# @ws_api.on('updateMapDrawing', namespace='/chat')
+# def updateDrawing(roomID, data):
+#     tempRoom = getRoom(roomID)
+#     if (tempRoom):
+#         tempRoom.drawing = data
+#     ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
+#                 'Data': {'Img': data}}, namespace='/chat')
+
+# @ws_api.on('updateBg', namespace='/chat')
+# def updateBackground(data):
+#     # require roomID
+#     ws_api.emit('FireEvent', {'EventName': 'UpdateBg',
+#                 'Data': {'Img': data}}, namespace='/chat')
 
 
 '''

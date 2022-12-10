@@ -13,6 +13,7 @@ import SocketView from '@/views/SocketView.vue';
 import LogoutView from '@/views/LogoutView.vue';
 import LobbyView from '@/views/LobbyView.vue';
 import RoomView from '@/views/RoomView.vue';
+import GameMap from '@/components/GameMapItem.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -61,6 +62,11 @@ const router = createRouter({
             path: '/lobby',
             name: 'select room',
             component: LobbyView,
+        },
+        {
+            path: '/draw',
+            name: 'draw',
+            component: GameMap,
         },
     ],
 });
