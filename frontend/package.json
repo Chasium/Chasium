@@ -14,8 +14,12 @@
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
     },
     "dependencies": {
+        "@microsoft/live-share": "^1.0.0-preview.4",
+        "@microsoft/live-share-canvas": "^1.0.0-preview.4",
+        "@microsoft/teams-js": "^2.6.0",
         "bulma": "^0.9.4",
         "element-plus": "^2.2.18",
+        "eventemitter3": "^5.0.0",
         "pinia": "^2.0.23",
         "sass": "^1.55.0",
         "vue": "^3.2.41",

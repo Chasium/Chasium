@@ -45,9 +45,7 @@ export default defineComponent({
         RoomItem,
     },
     created() {
-        this.socketStore.manager.subscribe('UpdateRoom', () => {
-            this.updateRoom();
-        });
+        this.socketStore.manager.subscribe('UpdateRoom', this.updateRoom);
     },
     data() {
         return {
@@ -57,7 +55,6 @@ export default defineComponent({
         };
     },
     methods: {
-        // TODO: receive socket event from backend
         async updateRoom() {
             try {
                 let response = await axios.post<{ roomID: Number[] }>(
@@ -93,9 +90,7 @@ export default defineComponent({
                 alert('error');
             }
         },
-        // TODO: seperate player and host
         async joinRoom(roomID: Number) {
-            // TODO: check if room still exist by first
             try {
                 let response = await axios.post<{ code: Number }>(
                     '/lobby/join',
@@ -111,6 +106,7 @@ export default defineComponent({
                         roomID,
                         this.userStore.userName
                     );
+                    this.socketStore.drawer.emit('joinRoom', roomID);
                     // console.log('join room ' + roomID + '!');
                     this.$router.push('/room/' + roomID);
                 } else {
@@ -131,8 +127,9 @@ export default defineComponent({
         this.updateRoom();
         // console.log(this.socketStore.manager.connected);
     },
-    // unmounted() {
-    //     // console.log('unmounted');
-    // },
+    unmounted() {
+        // console.log('unmounted');
+        this.socketStore.manager.unsubscribe('UpdateRoom', this.updateRoom);
+    },
 });
 </script>

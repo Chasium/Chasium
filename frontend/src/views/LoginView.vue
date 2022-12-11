@@ -90,7 +90,7 @@ export default defineComponent({
                     response.data['code'] === 0 ||
                     response.data['code'] === 3
                 ) {
-                    alert('登录成功');
+                    // alert('登录成功');
 
                     this.userStore.userName = this.form.userName;
                     this.userStore.session = response.data['session'];

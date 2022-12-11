@@ -5,6 +5,9 @@
 from flask_socketio import (
     SocketIO, send, emit, join_room, leave_room
 )
+from engineio.payload import Payload
+
+Payload.max_decode_packets = 100
 
 ws_api = SocketIO()
 
@@ -63,119 +66,37 @@ def removeUserFromRoom(roomID, username):
 def dismissRoom(roomID, username):
     print(username, 'DismissRoom', roomID)
     ws_api.emit('FireEvent', {'EventName': 'DismissRoom'},
-                namespace='/chat')
-
-
-# '''
-#     Drawing
-# '''
-
-
-# @ws_api.on('getMapDrawing', namespace='/chat')
-# def getMapDrawing(roomID):
-#     # require roomID
-#     tempDraw = None
-#     tempRoom = getRoom(roomID)
-#     if (tempRoom):
-#         data = tempRoom.drawing
-#     ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
-#                 'Data': {'Img': data}}, namespace='/chat', to=roomID)
-
-
-# @ws_api.on('updateMapDrawing', namespace='/chat')
-# def updateDrawing(roomID, data):
-#     tempRoom = getRoom(roomID)
-#     if (tempRoom):
-#         tempRoom.drawing = data
-#     ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
-#                 'Data': {'Img': data}}, namespace='/chat')
-
-# @ws_api.on('updateBg', namespace='/chat')
-# def updateBackground(data):
-#     # require roomID
-#     ws_api.emit('FireEvent', {'EventName': 'UpdateBg',
-#                 'Data': {'Img': data}}, namespace='/chat')
+                namespace='/chat', to=roomID)
 
 
 '''
-1. client request for room_name & room_namespace
-2. server respond for allocation of room
-3. client send join_room_event
-4. server receive join_room_event, join player into room specified
+    Drawing
 '''
 
 
-# receiving
-
-'''
-@ws_api.on('message')
-def handle_message(data):
-    print('receive message: ' + data)
+@ws_api.on('joinRoom', namespace='/draw')
+def drawerJoinRoom(roomID):
+    join_room(roomID)
 
 
-@ws_api.on('json')
-def handle_message(json):
-    print('receive message: ' + str(json))
+@ws_api.on('leaveRoom', namespace='/draw')
+def drawerLeaveRoom(roomID):
+    leave_room(roomID)
 
 
-@ws_api.on('my_event')
-def handle_my_custom_event(arg1, arg2, arg3):
-    print('received args: ' + arg1 + arg2 + arg3)
-
-# sending
-
-
-@ws_api.on('message')
-def handle_message(message):
-    send(message, namespace='/chat')
+@ws_api.on('playerDrawing', namespace='/draw')
+def playerDrawing(roomID, x, y, color, type):
+    ws_api.emit('UpdateMapDrawing', {'x': x, 'y': y, 'color': color, 'type': type},
+                namespace='/draw', include_self=False, to=roomID)
 
 
-def ack():
-    print('message was received!')
+@ws_api.on('cleanMapDrawing', namespace='/draw')
+def cleanMapDrawing(roomID):
+    ws_api.emit('CleanMapDrawing', namespace='/draw', to=roomID)
 
 
-@ws_api.on('my event')
-def handle_my_custom_event(json):
-    emit('my response', json, callback=ack)
-
-# broadcasting
-# passively
-
-
-@ws_api.on('broadcast')
-def broadcast_event(data):
-    emit('response', data, broadcast=True, namespace="/chat")
-
-# actively
-
-
-def some_function():
-    ws_api.emit('some event', {'data': 42})
-
-
-# Rooms: seperate users, 留一個房間接口
-
-@ws_api.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    send(username + ' has entered the room.', to=room)
-
-
-@ws_api.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    send(username + ' has left the room.', to=room)
-
-
-class MyCustomNamespace(Namespace):
-    def on_connect(self):
-        pass
-
-
-# class namespace
-ws_api.on_namespace(MyCustomNamespace('/test'))
-'''
+@ws_api.on('updateBg', namespace='/draw')
+def updateBackgroundImage(roomID, src):
+    print('update background')
+    ws_api.emit('UpdateBg', {'src': src},
+                namespace='/draw', include_self=False, to=roomID)

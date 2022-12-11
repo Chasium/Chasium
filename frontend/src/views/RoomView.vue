@@ -16,7 +16,11 @@
                 <!-- <router-link to="/lobby">Exit</router-link> -->
             </div>
         </div>
-        <game-map-item v-bind:roomID="this.roomID"></game-map-item>
+        <game-map-item
+            v-bind:roomID="this.roomID"
+            :color="this.color"
+            :isHost="this.userCharater == 'Host'"
+        ></game-map-item>
     </el-container>
 </template>
 
@@ -27,7 +31,7 @@ import { useSocketStore } from '@/stores/socket';
 import axios from 'axios';
 import type ExitRoomResponse from '@/generated/room/ExitRoomResponse';
 
-import GameMapItem from '@/components/GameMapItem.vue';
+import GameMapItem from '@/components/GameMap.vue';
 
 export default defineComponent({
     setup() {
@@ -38,12 +42,10 @@ export default defineComponent({
         GameMapItem,
     },
     created() {
-        this.socketStore.manager.subscribe('DismissRoom', () => {
+        this.socketStore.manager.subscribeOnce('DismissRoom', () => {
             this.forceExit();
         });
-        this.socketStore.manager.subscribe('NewMsg', (data: any) => {
-            console.log(data['Msg']);
-        });
+        this.socketStore.manager.subscribe('NewMsg', this.printMsg);
         this.roomID = Number(this.$route.params.roomID);
     },
     methods: {
@@ -53,6 +55,7 @@ export default defineComponent({
                 this.roomID,
                 this.userStore.userName
             );
+            this.socketStore.drawer.emit('leaveRoom', this.roomID);
             this.$router.push('/lobby');
         },
         startGame() {
@@ -61,20 +64,26 @@ export default defineComponent({
         setReady() {
             alert('Player ' + this.userStore.userName + ' is ready!');
         },
+        printMsg(data: any) {
+            console.log(data['Msg']);
+        },
         async checkInRoom() {
             try {
-                let response = await axios.post<{ code: Number; host: string }>(
-                    '/room/check',
-                    {
-                        roomID: this.roomID,
-                        userSession: this.userStore.session,
-                    }
-                );
+                let response = await axios.post<{
+                    code: Number;
+                    host: string;
+                    color: string;
+                }>('/room/check', {
+                    roomID: this.roomID,
+                    userSession: this.userStore.session,
+                });
                 if (response.data['code'] == 1) {
                     this.userCharater = 'Host';
                     this.hostName = response.data['host'];
+                    this.color = response.data['color'];
                 } else if (response.data['code'] == 2) {
                     this.userCharater = 'Player';
+                    this.color = response.data['color'];
                 } else if (response.data['code'] == -2) {
                     alert('you are not allowed into this room!');
                     this.$router.push('/lobby');
@@ -130,6 +139,7 @@ export default defineComponent({
             userCharater: 'unknown',
             hostName: '',
             playerNames: [],
+            color: '#FFFFFF',
         };
     },
     computed: {
@@ -143,14 +153,7 @@ export default defineComponent({
         // console.log('create room:', this.$route.params.roomID);
     },
     unmounted() {
-        // console.log('unmounted');
-        // this.socketStore.manager.unsubscribe('DismissRoom', () => {
-        //     alert('Host has left!');
-        //     this.forceExit();
-        // });
-        // this.socketStore.manager.unsubscribe('NewMsg', (data: any) => {
-        //     console.log(data['Msg']);
-        // });
+        this.socketStore.manager.unsubscribe('NewMsg', this.printMsg);
     },
 });
 </script>

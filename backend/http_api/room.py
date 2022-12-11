@@ -2,7 +2,7 @@ import asyncio
 from flask import (
     Blueprint, request
 )
-from .config import active_room, Room, getRoom, setRoom, removeRoom
+from .config import active_room, Room, getRoom, setRoom, removeRoom, USER_COLOR
 from generated.room.RoomRequest import RoomRequest
 
 room_bp = Blueprint('room', __name__, url_prefix='/room')
@@ -45,11 +45,18 @@ def check():
             responseData['host'] = host.username
             if (host.session == requestData.userSession):
                 responseData['code'] = 1
+                responseData['color'] = USER_COLOR[0]
             else:
                 playerList = room.getPlayers()
                 playerList = [p.session for p in playerList]
                 if requestData.userSession in playerList:
                     responseData['code'] = 2
+                    # TODO: bug of index outrange
+                    idx = playerList.index(requestData.userSession) + 1
+                    if idx >= len(USER_COLOR):
+                        responseData['color'] = '#663377'
+                    else:
+                        responseData['color'] = USER_COLOR[idx]
                 else:
                     responseData['code'] = -2
         else:

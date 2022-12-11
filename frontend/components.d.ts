@@ -29,6 +29,7 @@ declare module '@vue/runtime-core' {
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     GameMap: typeof import('./src/components/GameMap.vue')['default']
     GameMapItem: typeof import('./src/components/GameMapItem.vue')['default']
+    GameMapLayer: typeof import('./src/components/GameMapLayer.vue')['default']
     RoomItem: typeof import('./src/components/RoomItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

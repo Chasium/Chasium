@@ -13,7 +13,7 @@ import SocketView from '@/views/SocketView.vue';
 import LogoutView from '@/views/LogoutView.vue';
 import LobbyView from '@/views/LobbyView.vue';
 import RoomView from '@/views/RoomView.vue';
-import GameMap from '@/components/GameMapItem.vue';
+import GameMap from '@/components/GameMap.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),

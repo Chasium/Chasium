@@ -6,13 +6,11 @@ export const useSocketStore = defineStore('socket', {
     state() {
         return {
             manager: new SocketManager(),
+            drawer: io('http://127.0.0.1:5000/draw'),
         };
     },
 });
 
-// export declare interface SocketManager {
-//     on(event: string, listener: () => void): this;
-// }
 export class SocketManager extends EventEmitter {
     private socket;
     public eventDict;
@@ -24,8 +22,8 @@ export class SocketManager extends EventEmitter {
         this.socket.on('FireEvent', (args: any) => {
             const ev = args['EventName'];
             const data = args['Data'];
-            console.log('Event', ev, 'Fire!');
-            console.log('args:', data);
+            // console.log('Event', ev, 'Fire!');
+            // console.log('args:', data);
             this.emit(ev, data);
         });
         this.socket.on('connect', () => {
@@ -34,8 +32,8 @@ export class SocketManager extends EventEmitter {
     }
 
     public emitToSocket(ev: string, ...args: any[] | []) {
-        console.log('Event emitted:', ev);
-        console.log('args:', ...args);
+        // console.log('Event emitted:', ev);
+        // console.log('args:', ...args);
         if (args.length == 0) {
             this.socket.emit(ev);
         } else {
@@ -46,6 +44,11 @@ export class SocketManager extends EventEmitter {
     public subscribe(ev: string, listener: (args: any[]) => void) {
         console.log('Event subscribed:', ev);
         this.addListener(ev, listener);
+    }
+
+    public subscribeOnce(ev: string, listener: (args: any[]) => void) {
+        console.log('Event subscribed:', ev);
+        this.once(ev, listener);
     }
 
     public unsubscribe(ev: string, listener: (args: any[]) => void) {

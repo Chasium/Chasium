@@ -50,6 +50,9 @@ class Room:
     def getPlayers(self):
         return self.__playerList
 
+    def getIdx(self):
+        return len(self.__playerList)
+
     def addPlayer(self, player: Player):
         if player not in self.__playerList:
             self.__playerList.append(player)
@@ -88,27 +91,5 @@ async def removeRoom(roomID: int):
 
 active_room: dict[int, Room] = {}
 login_user = {}
-
-
-'''
-    TODO: should move out to somewhere
-'''
-
-
-@ws_api.on('getMapDrawing', namespace='/chat')
-def getMapDrawing(roomID):
-    tempRoom = getRoom(roomID)
-    if (tempRoom):
-        data = tempRoom.drawing
-        ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
-                                  'Data': {'Img': data}}, namespace='/chat', to=roomID)
-
-
-@ws_api.on('updateMapDrawing', namespace='/chat')
-def updateDrawing(roomID, data):
-    # print(data)
-    tempRoom = getRoom(roomID)
-    if (tempRoom):
-        tempRoom.drawing = data
-        ws_api.emit('FireEvent', {'EventName': 'UpdateMapDrawing',
-                                  'Data': {'Img': data}}, namespace='/chat', to=roomID)
+USER_COLOR = ['#000000', '#FF0000', '#00FF00',
+              '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF']
