@@ -9,6 +9,17 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    // 强制预构建插件包
+    optimizeDeps: {
+        include: [
+            `monaco-editor/esm/vs/language/json/json.worker`,
+            `monaco-editor/esm/vs/language/css/css.worker`,
+            `monaco-editor/esm/vs/language/html/html.worker`,
+            `monaco-editor/esm/vs/language/typescript/ts.worker`,
+            `monaco-editor/esm/vs/editor/editor.worker`,
+        ],
+    },
+
     plugins: [
         vue(),
         vueJsx(),
