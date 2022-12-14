@@ -1,0 +1,29 @@
+<!DOCTYPE api-data SYSTEM '../../dtd/api-data.dtd'>
+<api-data>
+    <api-path>/card-template/create</api-path>
+    <http-request />
+    <main-class>
+        <class class-name="CreateTemplateRequest">
+            <description>创建人物卡模板请求</description>
+            <string>
+                <key>session</key>
+                <description>用户Session</description>
+            </string>
+            <string>
+                <key>name</key>
+                <description>人物卡模板名</description>
+            </string>
+            <string>
+                <key>template</key>
+                <description>转化为Json字符串的人物卡模板</description>
+            </string>
+            <list>
+                <key>scripts</key>
+                <description>模板中的脚本列表</description>
+                <string-element>
+                    <description>列表中的一个脚本</description>
+                </string-element>
+            </list>
+        </class>
+    </main-class>
+</api-data>
