@@ -44,6 +44,8 @@ declare module '@vue/runtime-core' {
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTree: typeof import('element-plus/es')['ElTree']
+    ListComponent: typeof import('./src/components/list/ListComponent.vue')['default']
+    ListElement: typeof import('./src/components/list/ListElement.vue')['default']
     PropertyEdit: typeof import('./src/components/template_editor/PropertyEdit.vue')['default']
     PropertyPreview: typeof import('./src/components/template_editor/PropertyPreview.vue')['default']
     RoomItem: typeof import('./src/components/RoomItem.vue')['default']

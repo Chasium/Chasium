@@ -5,6 +5,14 @@
 """
 from db import db
 
+from db.models.user import UserData
+from db.models.card_script import CardScriptData
+from db.models.card import CardData
+from db.models.card_template import CardTemplateData
+
+
+__all__ = [UserData, CardScriptData, CardData, CardTemplateData]
+
 
 class Test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
