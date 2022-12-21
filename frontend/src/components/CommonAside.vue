@@ -42,6 +42,9 @@
                 <el-menu-item @click="clickScript" index="2-2"
                     >可用剧本</el-menu-item
                 >
+                <el-menu-item @click="clickNewScript" index="2-3"
+                    >新建剧本</el-menu-item
+                >
             </el-menu-item-group>
         </el-sub-menu>
     </el-menu>
@@ -97,6 +100,11 @@ export default defineComponent({
         clickMyScript() {
             if (this.$route.path != '/myscript') {
                 this.$router.push('myscript');
+            }
+        },
+        clickNewScript() {
+            if (this.$route.path != '/newscript') {
+                this.$router.push('newscript');
             }
         },
     },
